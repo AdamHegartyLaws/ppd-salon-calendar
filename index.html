@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="L'Oréal Professionnel Brand Activation Calendar"/>
-<title>L'Oréal Professionnel | Activation Calendar</title>
+<meta name="description" content="L'Oréal Professional Hair Brands Education Calendar"/>
+<title>L'Oréal Professional Hair Brands | Education Calendar</title>
 <style>
 /* ── RESET ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -186,6 +186,16 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
 .upcoming-toggle.toggle-active{background:#1A1A1A;color:#FFF;}
 .upcoming-toggle:hover{box-shadow:0 4px 12px rgba(0,0,0,0.12);}
 
+/* ── BRAND PILL FILTER BAR ── */
+.brand-pill-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;}
+.bpf-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#BBB;margin-right:4px;white-space:nowrap;flex-shrink:0;}
+.brand-pill-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:30px;border:2px solid transparent;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.brand-pill-btn:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,0.12);}
+.brand-pill-btn.brand-off{background:#F0F0F0 !important;color:#CCC !important;border-color:#E0E0E0 !important;}
+
+/* ── LOCATION FILTER BAR ── */
+.location-filter-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;align-items:center;}
+
 </style>
 </head>
 <body>
@@ -209,6 +219,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
   <h2 class="section-title">Full-Year <span>Brand Activation</span> Snapshot</h2>
   <div id="loading-yearly" class="loading-box"><span class="spinner">⏳</span><br><br>Loading calendar...</div>
   <div id="yearly-content" style="display:none">
+    <div id="brand-pill-filter" class="brand-pill-bar"></div>
+    <div id="location-filter" class="location-filter-bar"></div>
     <div id="yearly-type-filter" class="yearly-type-bar"></div>
     <div class="year-nav">
       <button class="year-btn" id="btn-prev-year" onclick="changeYear(-1)">◀</button>
@@ -276,6 +288,7 @@ var allEvents    = [];   // all parsed event rows
 var activeFilter = 'All';
 var displayYear  = new Date().getFullYear();
 var activeSwimlaneType = 'All';
+var activeBrands = [];
 var showUpcomingOnly = false;
 var availableYears = [];
 
@@ -450,13 +463,16 @@ function initApp(metaRows, brandsRows, eventsRows, datesRows) {
   }
 
   /* — update page header from meta — */
-  document.title = "L'Oréal Professionnel | " + (meta.title || 'Activation Calendar');
+  document.title = "L'Oréal Professional Brands | " + (meta.title || 'Education Calendar');
   document.getElementById('page-title').innerHTML =
-    (meta.title || 'Activation Calendar').replace('Calendar', '<span>Calendar</span>');
+    (meta.title || 'Education Calendar').replace('Calendar', '<span>Calendar</span>');
   document.getElementById('page-subtitle').textContent =
     (meta.subtitle || '') + (meta.updated ? ' · Updated ' + meta.updated : '');
 
   /* — render both views — */
+  activeBrands = brandOrder.slice();   // all brands active by default
+  buildBrandPillFilter();
+  buildLocationFilter();
   buildYearlyTypeFilter();
   buildSwimlane();
   buildStats();
@@ -514,6 +530,7 @@ function buildSwimlane() {
     var brandEvents = yearEvents.filter(function(ev) { return ev.brandKey === key; });
 
     var tr = document.createElement('tr');
+    tr.setAttribute('data-brandkey', key);  
 
     /* brand label cell */
     var tdLabel = el('td', 'brand-label');
@@ -536,6 +553,7 @@ function buildSwimlane() {
           pill.style.borderLeftColor = brand.brandColor;
           pill.style.cursor = 'pointer';
           pill.setAttribute('data-type', ev.classType);
+          pill.setAttribute('data-location', ev.classLocationCategory || 'Other');
           if (isPastDate(ev.classDate)) pill.classList.add('past-event');
           pill.addEventListener('click', (function(evData){ return function(){ showPDP(evData); }; })(ev));
 
@@ -570,7 +588,8 @@ function changeYear(dir) {
   if (idx < 0 || idx >= availableYears.length) return;
   displayYear = availableYears[idx];
   buildSwimlane();
-  filterSwimlaneByType(activeSwimlaneType); // re-apply active filter to new pills
+  applyBrandRowVisibility();            // re-hide any deselected brand rows
+  filterSwimlaneByType(activeSwimlaneType); // re-apply type + location + upcoming
 }
 
 /* ══════════════════════════════════════════
@@ -1041,9 +1060,11 @@ function applyPillVisibility() {
   document.querySelectorAll('#swimlane-table .event-pill').forEach(function(pill) {
     var typeOk     = activeSwimlaneType === 'All' ||
                      pill.getAttribute('data-type') === activeSwimlaneType;
+    var locationOk = activeSwimlaneLocation === 'All' ||
+                     pill.getAttribute('data-location') === activeSwimlaneLocation;
     var upcomingOk = !showUpcomingOnly ||
                      !pill.classList.contains('past-event');
-    pill.style.display = (typeOk && upcomingOk) ? 'block' : 'none';
+    pill.style.display = (typeOk && locationOk && upcomingOk) ? 'block' : 'none';
   });
 }
 
@@ -1055,6 +1076,123 @@ function toggleUpcomingOnly() {
   var btn = document.getElementById('toggle-upcoming');
   btn.classList.toggle('toggle-active', showUpcomingOnly);
   btn.textContent = showUpcomingOnly ? 'Showing Upcoming' : 'Upcoming Only';
+  applyPillVisibility();
+}
+
+/* ══════════════════════════════════════════
+   LOCATION FILTER DEFINITIONS
+   Keys must match classLocationCategory values
+   exactly as entered in events.csv
+══════════════════════════════════════════ */
+var LOCATION_DEFS = [
+  { key:'All',      label:'All Locations', activeColor:'#1A1A1A', lightBg:'#F0F0F0', borderColor:'#CCC',    textColor:'#555'    },
+  { key:'Online',   label:'🌐 Online',     activeColor:'#0057A8', lightBg:'#EAF2FF', borderColor:'#0057A8', textColor:'#0057A8' },
+  { key:'Academy',  label:'⭐ Academy',    activeColor:'#C8A84B', lightBg:'#FDF8EC', borderColor:'#C8A84B', textColor:'#9A7A0A' },
+  { key:'Tasmania', label:'📍 Tasmania',   activeColor:'#4A7C59', lightBg:'#F2F9F5', borderColor:'#4A7C59', textColor:'#4A7C59' }
+];
+
+/* ── BRAND PILL FILTER ── */
+function buildBrandPillFilter() {
+  var bar = document.getElementById('brand-pill-filter');
+  if (!bar) return;
+  bar.innerHTML = '<span class="bpf-label">Brands</span>';
+
+  brandOrder.forEach(function(key) {
+    var b = brandLookup[key];
+    if (!b) return;
+    var btn = document.createElement('button');
+    btn.className = 'brand-pill-btn';
+    btn.setAttribute('data-brandkey', key);
+    btn.innerHTML = b.brandIcon + ' ' + sanitize(b.brandName);
+    /* active by default — filled with brand colour */
+    btn.style.background  = b.brandColor;
+    btn.style.color       = b.textColor;
+    btn.style.borderColor = b.brandColor;
+    btn.addEventListener('click', function() { toggleBrandPill(key); });
+    bar.appendChild(btn);
+  });
+}
+
+function toggleBrandPill(brandKey) {
+  var idx = activeBrands.indexOf(brandKey);
+  var isNowActive;
+
+  if (idx === -1) {
+    activeBrands.push(brandKey);  // re-activate
+    isNowActive = true;
+  } else {
+    activeBrands.splice(idx, 1); // deactivate
+    isNowActive = false;
+  }
+
+  /* update button appearance */
+  var btn = document.querySelector('.brand-pill-btn[data-brandkey="' + brandKey + '"]');
+  if (btn) {
+    var b = brandLookup[brandKey];
+    if (isNowActive) {
+      btn.classList.remove('brand-off');
+      btn.style.background  = b.brandColor;
+      btn.style.color       = b.textColor;
+      btn.style.borderColor = b.brandColor;
+    } else {
+      btn.classList.add('brand-off');
+      btn.style.background  = '';
+      btn.style.color       = '';
+      btn.style.borderColor = '';
+    }
+  }
+
+  applyBrandRowVisibility();
+}
+
+function applyBrandRowVisibility() {
+  /* shows/hides entire table rows — works independently of pill-level filters */
+  document.querySelectorAll('#swimlane-table tbody tr').forEach(function(row) {
+    var key = row.getAttribute('data-brandkey');
+    row.style.display = (activeBrands.indexOf(key) !== -1) ? '' : 'none';
+  });
+}
+
+/* ── LOCATION FILTER ── */
+function buildLocationFilter() {
+  var bar = document.getElementById('location-filter');
+  if (!bar) return;
+  bar.innerHTML = '';
+
+  LOCATION_DEFS.forEach(function(loc) {
+    var btn = document.createElement('button');
+    btn.className = 'type-filter-btn';
+    btn.setAttribute('data-location', loc.key);
+    btn.textContent = loc.label;
+    applyLocationButtonStyle(btn, loc, loc.key === activeSwimlaneLocation);
+    btn.addEventListener('click', function() { filterSwimlaneByLocation(loc.key); });
+    bar.appendChild(btn);
+  });
+}
+
+function applyLocationButtonStyle(btn, def, isActive) {
+  if (isActive) {
+    btn.style.background  = def.activeColor;
+    btn.style.color       = '#FFF';
+    btn.style.borderColor = def.activeColor;
+  } else {
+    btn.style.background  = def.lightBg;
+    btn.style.color       = def.textColor;
+    btn.style.borderColor = def.borderColor;
+  }
+}
+
+function filterSwimlaneByLocation(locKey) {
+  activeSwimlaneLocation = locKey;
+
+  /* update location button styles */
+  document.querySelectorAll('#location-filter .type-filter-btn').forEach(function(btn) {
+    var def = LOCATION_DEFS.find(function(d) {
+      return d.key === btn.getAttribute('data-location');
+    });
+    if (def) applyLocationButtonStyle(btn, def, def.key === locKey);
+  });
+
   applyPillVisibility();
 }
 
