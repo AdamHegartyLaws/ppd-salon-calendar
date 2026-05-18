@@ -174,6 +174,18 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
 .type-filter-btn{padding:8px 22px;border-radius:30px;border:2px solid;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.4px;background:#FFF;}
 .type-filter-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.12);}
 
+/* ── PAST EVENT DIMMING ── */
+.event-pill.past-event{opacity:0.32;filter:grayscale(55%);}
+.event-pill.past-event:hover{opacity:0.55;}
+
+/* ── FREE BADGE ON PILL ── */
+.pill-free{display:inline-block;font-size:8px;font-weight:800;background:#0057A8;color:#FFF;padding:1px 5px;border-radius:3px;margin-left:5px;letter-spacing:0.5px;vertical-align:middle;line-height:1.6;}
+
+/* ── UPCOMING ONLY TOGGLE ── */
+.upcoming-toggle{padding:7px 18px;border-radius:30px;border:2px solid #1A1A1A;background:#FFF;color:#1A1A1A;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-left:auto;}
+.upcoming-toggle.toggle-active{background:#1A1A1A;color:#FFF;}
+.upcoming-toggle:hover{box-shadow:0 4px 12px rgba(0,0,0,0.12);}
+
 </style>
 </head>
 <body>
@@ -202,6 +214,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
       <button class="year-btn" id="btn-prev-year" onclick="changeYear(-1)">◀</button>
       <span class="year-display" id="year-display"></span>
       <button class="year-btn" id="btn-next-year" onclick="changeYear(1)">▶</button>
+      <button class="upcoming-toggle" id="toggle-upcoming" onclick="toggleUpcomingOnly()">Upcoming Only</button>
     </div>
     <div class="table-wrap">
       <table class="swimlane-table" id="swimlane-table"></table>
@@ -263,6 +276,7 @@ var allEvents    = [];   // all parsed event rows
 var activeFilter = 'All';
 var displayYear  = new Date().getFullYear();
 var activeSwimlaneType = 'All';
+var showUpcomingOnly = false;
 var availableYears = [];
 
 var today          = getTodayStr();
@@ -522,6 +536,7 @@ function buildSwimlane() {
           pill.style.borderLeftColor = brand.brandColor;
           pill.style.cursor = 'pointer';
           pill.setAttribute('data-type', ev.classType);
+          if (isPastDate(ev.classDate)) pill.classList.add('past-event');
           pill.addEventListener('click', (function(evData){ return function(){ showPDP(evData); }; })(ev));
 
           /* tooltip includes artist if present */
@@ -529,7 +544,7 @@ function buildSwimlane() {
           var tipPrice  = isFreeEvent(ev) ? ' · Free' : (ev.classPrice ? ' · $' + ev.classPrice : '');
 
           pill.innerHTML =
-            '<span class="pill-title">' + ev.classTitle + '</span>' +
+            '<span class="pill-title">' + ev.classTitle + (isFreeEvent(ev) ? '<span class="pill-free">FREE</span>' : '') +
             '<span class="pill-date">' + formatDatetime(ev.classDate, ev.classStartTime, ev.classEndTime, true) +
             '<span class="tt">' +
               '📌 ' + ev.classType + tipArtist + tipPrice + '<br>' +
@@ -866,10 +881,12 @@ document.addEventListener('keydown', function(e) {
 
 /* formats "22/05/2026" → "22 May" for pill display */
 function formatPillDate(dateStr) {
-  var parts = dateStr.split('/');
-  if (parts.length !== 3) return dateStr;
-  var names = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return parseInt(parts[0]) + ' ' + (names[parseInt(parts[1]) - 1] || '');
+  /* "22/05/2026" → "Tue 22 May" — used on swimlane pills */
+  var p = dateStr.split('/');
+  if (p.length !== 3) return dateStr;
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var dow = getDayOfWeek(dateStr);
+  return (dow ? dow + ' ' : '') + parseInt(p[0]) + ' ' + (months[parseInt(p[1]) - 1] || '');
 }
 
 /* ══════════════════════════════════════════
@@ -920,11 +937,7 @@ function filterSwimlaneByType(type) {
     if (def) applyTypeButtonStyle(btn, def, def.key === type);
   });
 
-  /* show / hide pills */
-  document.querySelectorAll('#swimlane-table .event-pill').forEach(function(pill) {
-    pill.style.display =
-      (type === 'All' || pill.getAttribute('data-type') === type) ? 'block' : 'none';
-  });
+  applyPillVisibility();
 }
 
 /* ══════════════════════════════════════════
@@ -979,9 +992,70 @@ function formatDatetime(dateStr, startTime, endTime, useShortDate) {
     useShortDate = false → "22/05/2026 | 9:00 AM – 11:00 AM (2h)" (cards / PDP)
     If no times in CSV → just returns the date with no pipe
   */
-  var d = useShortDate ? formatPillDate(dateStr) : (dateStr || '');
+  var d = useShortDate ? formatPillDate(dateStr) : formatLongDate(dateStr);
   var t = formatTimeRange(startTime, endTime);
   return t ? d + ' \u00a0|\u00a0 ' + t : d;  // non-breaking spaces around pipe
+}
+
+/* ══════════════════════════════════════════
+   DAY OF WEEK HELPERS
+══════════════════════════════════════════ */
+function getDayOfWeek(dateStr) {
+  /* "22/05/2026" → "Tue" */
+  var p = dateStr.split('/');
+  if (p.length !== 3) return '';
+  var d = new Date(parseInt(p[2]), parseInt(p[1]) - 1, parseInt(p[0]));
+  return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()] || '';
+}
+
+function formatLongDate(dateStr) {
+  /* "22/05/2026" → "Tue 22 May 2026" — used on cards and PDP */
+  var p = dateStr.split('/');
+  if (p.length !== 3) return dateStr;
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var dow = getDayOfWeek(dateStr);
+  return (dow ? dow + ' ' : '') +
+    parseInt(p[0]) + ' ' +
+    (months[parseInt(p[1]) - 1] || '') + ' ' +
+    p[2];
+}
+
+/* ══════════════════════════════════════════
+   PAST DATE CHECK
+══════════════════════════════════════════ */
+function isPastDate(dateStr) {
+  var p = dateStr.split('/');
+  if (p.length !== 3) return false;
+  var evDate = new Date(parseInt(p[2]), parseInt(p[1]) - 1, parseInt(p[0]));
+  var now = new Date();
+  now.setHours(0, 0, 0, 0);
+  return evDate < now;
+}
+
+/* ══════════════════════════════════════════
+   UNIFIED PILL VISIBILITY
+   Single source of truth — both type filter
+   and upcoming toggle route through here
+══════════════════════════════════════════ */
+function applyPillVisibility() {
+  document.querySelectorAll('#swimlane-table .event-pill').forEach(function(pill) {
+    var typeOk     = activeSwimlaneType === 'All' ||
+                     pill.getAttribute('data-type') === activeSwimlaneType;
+    var upcomingOk = !showUpcomingOnly ||
+                     !pill.classList.contains('past-event');
+    pill.style.display = (typeOk && upcomingOk) ? 'block' : 'none';
+  });
+}
+
+/* ══════════════════════════════════════════
+   UPCOMING ONLY TOGGLE
+══════════════════════════════════════════ */
+function toggleUpcomingOnly() {
+  showUpcomingOnly = !showUpcomingOnly;
+  var btn = document.getElementById('toggle-upcoming');
+  btn.classList.toggle('toggle-active', showUpcomingOnly);
+  btn.textContent = showUpcomingOnly ? 'Showing Upcoming' : 'Upcoming Only';
+  applyPillVisibility();
 }
 
 </script>
