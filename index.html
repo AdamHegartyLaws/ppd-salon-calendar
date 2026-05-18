@@ -1103,7 +1103,7 @@ function buildBrandPillFilter() {
     var btn = document.createElement('button');
     btn.className = 'brand-pill-btn';
     btn.setAttribute('data-brandkey', key);
-    btn.innerHTML = b.brandIcon + ' ' + sanitize(b.brandName);
+    btn.innerHTML = b.brandIcon + ' ' + b.brandName;
     /* active by default — filled with brand colour */
     btn.style.background  = b.brandColor;
     btn.style.color       = b.textColor;
