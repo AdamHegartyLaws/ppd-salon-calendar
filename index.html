@@ -4,7 +4,6 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content="L'Oréal Professional Hair Brands Education Calendar"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <title>L'Oréal Professional Hair Brands | Education Calendar</title>
 <style>
 /* ── RESET ── */
@@ -197,18 +196,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
 /* ── LOCATION FILTER BAR ── */
 .location-filter-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;align-items:center;}
 
-/* ── EXPORT PILL & DROPDOWN ── */
-.export-wrap{position:relative;}
-.export-pill{padding:7px 18px;border-radius:30px;border:2px solid #C8A84B;background:#FFF;color:#C8A84B;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-.export-pill:hover{background:#FDF8EC;}
-.export-pill:disabled{opacity:0.6;cursor:not-allowed;}
-.export-dropdown{display:none;position:absolute;top:calc(100% + 8px);right:0;background:#FFF;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,0.15);overflow:hidden;min-width:180px;z-index:100;border:1px solid #F0F0F0;}
-.export-dropdown.open{display:block;}
-.export-option{display:flex;align-items:center;gap:10px;width:100%;padding:13px 18px;border:none;background:#FFF;text-align:left;font-size:13px;font-weight:600;cursor:pointer;transition:background 0.15s;color:#1A1A1A;}
-.export-option:hover{background:#F5F5F5;}
-.export-option-sub{display:block;font-size:10px;color:#AAA;font-weight:400;margin-top:1px;}
-.export-divider{height:1px;background:#F0F0F0;margin:0;}
-
 </style>
 </head>
 <body>
@@ -216,7 +203,11 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
 <!-- ████ HEADER ████ -->
 <header class="site-header">
 <<<<<<< HEAD
+<<<<<<< HEAD
   <div class="eyebrow">L'Oréal Professional Brands Portfolio</div>
+=======
+  <div class="eyebrow">L'Oréal Professionnel Portfolio</div>
+>>>>>>> parent of 62ee19b (commit)
   <h1 id="page-title">Education <span>Calendar</span></h1>
 =======
   <div class="eyebrow">L'Oréal Professionnel Portfolio</div>
@@ -244,20 +235,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
       <button class="year-btn" id="btn-prev-year" onclick="changeYear(-1)">◀</button>
       <span class="year-display" id="year-display"></span>
       <button class="year-btn" id="btn-next-year" onclick="changeYear(1)">▶</button>
-    <button class="upcoming-toggle" id="toggle-upcoming" onclick="toggleUpcomingOnly()">Upcoming Only</button>
-    <div class="export-wrap">
-      <button class="export-pill" id="export-pill-btn" onclick="toggleExportMenu()">⬇ Export</button>
-      <div class="export-dropdown" id="export-dropdown">
-        <button class="export-option" onclick="exportPNG()">
-          📷 <span>Save as PNG<span class="export-option-sub">Snapshot of current view</span></span>
-        </button>
-        <div class="export-divider"></div>
-        <button class="export-option" onclick="exportExcel()">
-          📊 <span>Save as Excel<span class="export-option-sub">Filtered event list</span></span>
-        </button>
-      </div>
-  </div>
-</div>
+      <button class="upcoming-toggle" id="toggle-upcoming" onclick="toggleUpcomingOnly()">Upcoming Only</button>
+    </div>
     <div class="table-wrap">
       <table class="swimlane-table" id="swimlane-table"></table>
     </div>
@@ -584,7 +563,7 @@ function buildSwimlane() {
           pill.style.borderLeftColor = brand.brandColor;
           pill.style.cursor = 'pointer';
           pill.setAttribute('data-type', ev.classType);
-          pill.setAttribute('data-location', ev.classLocation || 'Other');
+          pill.setAttribute('data-location', ev.classLocationCategory || 'Other');
           if (isPastDate(ev.classDate)) pill.classList.add('past-event');
           pill.addEventListener('click', (function(evData){ return function(){ showPDP(evData); }; })(ev));
 
@@ -1112,7 +1091,7 @@ function toggleUpcomingOnly() {
 
 /* ══════════════════════════════════════════
    LOCATION FILTER DEFINITIONS
-   Keys must match classLocation values
+   Keys must match classLocationCategory values
    exactly as entered in events.csv
 ══════════════════════════════════════════ */
 var LOCATION_DEFS = [
@@ -1225,243 +1204,6 @@ function filterSwimlaneByLocation(locKey) {
   });
 
   applyPillVisibility();
-}
-
-/* ══════════════════════════════════════════
-   EXPORT — shared utilities
-══════════════════════════════════════════ */
-
-/* Close dropdown when clicking outside */
-document.addEventListener('click', function(e) {
-  var wrap = document.querySelector('.export-wrap');
-  if (wrap && !wrap.contains(e.target)) {
-    document.getElementById('export-dropdown').classList.remove('open');
-  }
-});
-
-function toggleExportMenu() {
-  document.getElementById('export-dropdown').classList.toggle('open');
-}
-
-function getFilteredEvents() {
-  /* Returns events matching ALL active filters — used by both export types */
-  var filtered = allEvents.filter(function(ev) {
-    if (activeBrands.indexOf(ev.brandKey) === -1)                              return false;
-    if (getYearFromDate(ev.classDate) !== displayYear)                         return false;
-    if (activeSwimlaneType !== 'All' && ev.classType !== activeSwimlaneType)   return false;
-    if (activeSwimlaneLocation !== 'All' &&
-       (ev.classLocationCategory || '') !== activeSwimlaneLocation)            return false;
-    if (showUpcomingOnly && isPastDate(ev.classDate))                          return false;
-    return true;
-  });
-
-  /* sort chronologically DD/MM/YYYY → YYYYMMDD for comparison */
-  filtered.sort(function(a, b) {
-    var pa = a.classDate.split('/'), pb = b.classDate.split('/');
-    if (pa.length !== 3 || pb.length !== 3) return 0;
-    return (pa[2] + pa[1] + pa[0]).localeCompare(pb[2] + pb[1] + pb[0]);
-  });
-
-  return filtered;
-}
-
-/* ══════════════════════════════════════════
-   EXPORT — PNG (requires html2canvas CDN)
-══════════════════════════════════════════ */
-function exportPNG() {
-  document.getElementById('export-dropdown').classList.remove('open');
-
-  if (typeof html2canvas === 'undefined') {
-    alert('PNG export requires the html2canvas library.\nCheck that the <script> tag in <head> loaded correctly.');
-    return;
-  }
-
-  var btn = document.getElementById('export-pill-btn');
-  btn.textContent = '⏳ Generating...';
-  btn.disabled = true;
-
-  var target = document.getElementById('table-wrap');
-
-  html2canvas(target, {
-    backgroundColor: '#FFFFFF',
-    scale: 2,          // retina-quality output
-    useCORS: true,
-    logging: false,
-    scrollX: 0,
-    scrollY: -window.scrollY
-  })
-  .then(function(canvas) {
-    var link = document.createElement('a');
-    link.download = 'loreal-calendar-' + displayYear + '.png';
-    link.href = canvas.toDataURL('image/png');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    btn.textContent = '⬇ Export';
-    btn.disabled = false;
-  })
-  .catch(function(err) {
-    btn.textContent = '⬇ Export';
-    btn.disabled = false;
-    alert('PNG export failed. Try Chrome or Edge.\n\nError: ' + err.message);
-  });
-}
-
-/* ══════════════════════════════════════════
-   EXPORT — Excel (no CDN — pure HTML→XLS)
-   Opens in Excel with brand colour coding,
-   frozen header rows and formatted columns
-══════════════════════════════════════════ */
-function exportExcel() {
-  document.getElementById('export-dropdown').classList.remove('open');
-
-  var events  = getFilteredEvents();
-  var today   = getTodayStr();
-
-  /* active filter summary shown in file */
-  var filterSummary = [
-    'Year: ' + displayYear,
-    'Type: ' + activeSwimlaneType,
-    'Location: ' + activeSwimlaneLocation,
-    showUpcomingOnly ? 'Upcoming only' : 'All dates',
-    'Brands: ' + (activeBrands.length === brandOrder.length
-      ? 'All'
-      : activeBrands.map(function(k) {
-          return brandLookup[k] ? brandLookup[k].brandName : k;
-        }).join(', '))
-  ].join('  |  ');
-
-  /* build data rows */
-  var dataRows = events.map(function(ev, idx) {
-    var brand    = brandLookup[ev.brandKey] || {};
-    var bgColor  = brand.brandColor  || '#1A1A1A';
-    var txtColor = brand.textColor   || '#FFFFFF';
-    var free     = isFreeEvent(ev);
-    var dur      = calcDuration(ev.classStartTime, ev.classEndTime);
-    var price    = free ? 'Free' : (ev.classPrice ? '$' + ev.classPrice : '—');
-    var timeDisp = (ev.classStartTime && ev.classEndTime)
-      ? ev.classStartTime + ' – ' + ev.classEndTime
-      : (ev.classStartTime || '—');
-    var rowBg    = idx % 2 === 0 ? '#FFFFFF' : '#FAFAFA';
-    var cellBase = 'style="padding:9px 12px;border-bottom:1px solid #EEEEEE;vertical-align:top;font-size:12px;"';
-
-    return '<tr style="background:' + rowBg + ';">' +
-      /* Brand */
-      '<td style="background:' + bgColor + ';color:' + txtColor + ';font-weight:700;' +
-        'padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.2);white-space:nowrap;">' +
-        sanitize(brand.brandName || ev.brandKey) + '</td>' +
-      /* Title */
-      '<td ' + cellBase + ' style="padding:9px 12px;border-bottom:1px solid #EEE;font-weight:600;min-width:220px;">' +
-        sanitize(ev.classTitle) + '</td>' +
-      /* Artist */
-      '<td ' + cellBase + '>' + sanitize(ev.classArtists || '—') + '</td>' +
-      /* Type */
-      '<td ' + cellBase + '>' + sanitize(ev.classType) + '</td>' +
-      /* Location category */
-      '<td ' + cellBase + '>' + sanitize(ev.classLocationCategory || '—') + '</td>' +
-      /* Full location */
-      '<td ' + cellBase + ' style="padding:9px 12px;border-bottom:1px solid #EEE;min-width:180px;">' +
-        sanitize(ev.classLocation || '—') + '</td>' +
-      /* Date */
-      '<td ' + cellBase + ' style="padding:9px 12px;border-bottom:1px solid #EEE;white-space:nowrap;">' +
-        sanitize(formatLongDate(ev.classDate)) + '</td>' +
-      /* Time */
-      '<td ' + cellBase + ' style="padding:9px 12px;border-bottom:1px solid #EEE;white-space:nowrap;">' +
-        sanitize(timeDisp) + '</td>' +
-      /* Duration */
-      '<td ' + cellBase + ' style="padding:9px 12px;border-bottom:1px solid #EEE;text-align:center;">' +
-        sanitize(dur || '—') + '</td>' +
-      /* Price */
-      '<td ' + cellBase + ' style="padding:9px 12px;border-bottom:1px solid #EEE;text-align:center;' +
-        (free ? 'color:#0057A8;font-weight:700;' : '') + '">' +
-        sanitize(price) + '</td>' +
-      /* Link */
-      '<td ' + cellBase + '>' +
-        (ev.classLink
-          ? '<a href="' + sanitize(ev.classLink) + '" style="color:#0057A8;">' +
-              sanitize(ev.classCTALabel || 'Register') + '</a>'
-          : '—') +
-      '</td>' +
-    '</tr>';
-  }).join('');
-
-  var colStyle = 'style="padding:10px 12px;text-align:left;font-size:10px;' +
-    'letter-spacing:1px;text-transform:uppercase;color:#555;' +
-    'background:#F0F0F0;border-bottom:2px solid #CCCCCC;white-space:nowrap;"';
-
-  var html =
-    '<!DOCTYPE html>' +
-    '<html xmlns:o="urn:schemas-microsoft-com:office:office" ' +
-          'xmlns:x="urn:schemas-microsoft-com:office:excel" ' +
-          'xmlns="http://www.w3.org/TR/REC-html40">' +
-    '<head><meta charset="UTF-8">' +
-    '<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>' +
-    '<x:ExcelWorksheet><x:Name>' + displayYear + ' Calendar</x:Name>' +
-    '<x:WorksheetOptions><x:FreezePanes/><x:FrozenNoSplit/>' +
-    '<x:SplitHorizontal>4</x:SplitHorizontal>' +
-    '<x:TopRowBottomPane>4</x:TopRowBottomPane>' +
-    '</x:WorksheetOptions></x:ExcelWorksheet>' +
-    '</x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->' +
-    '</head><body>' +
-    '<table border="0" cellspacing="0" cellpadding="0" ' +
-      'style="font-family:\'Segoe UI\',Arial,sans-serif;border-collapse:collapse;width:100%;">' +
-
-    /* Title row */
-    '<tr><td colspan="11" style="background:#1A1A1A;color:#C8A84B;font-size:16px;' +
-      'font-weight:800;padding:16px 16px;letter-spacing:1px;">' +
-      "L'ORÉAL PROFESSIONNEL &nbsp;|&nbsp; " + displayYear + ' Activation Calendar' +
-    '</td></tr>' +
-
-    /* Filter summary row */
-    '<tr><td colspan="11" style="background:#2A2A2A;color:#888;font-size:10px;' +
-      'padding:8px 16px;letter-spacing:0.4px;">' +
-      'Exported ' + today + ' &nbsp;|&nbsp; ' + sanitize(filterSummary) +
-    '</td></tr>' +
-
-    /* Event count row */
-    '<tr><td colspan="11" style="background:#F5F0E0;color:#9A7A0A;font-size:11px;' +
-      'font-weight:600;padding:8px 16px;">' +
-      events.length + ' event' + (events.length !== 1 ? 's' : '') +
-      ' shown based on active filters' +
-    '</td></tr>' +
-
-    /* Spacer */
-    '<tr><td colspan="11" style="height:6px;background:#FFF;"></td></tr>' +
-
-    /* Column headers */
-    '<tr>' +
-      '<th ' + colStyle + '>Brand</th>' +
-      '<th ' + colStyle + '>Event Title</th>' +
-      '<th ' + colStyle + '>Artist / Educator</th>' +
-      '<th ' + colStyle + '>Type</th>' +
-      '<th ' + colStyle + '>Category</th>' +
-      '<th ' + colStyle + '>Full Location</th>' +
-      '<th ' + colStyle + '>Date</th>' +
-      '<th ' + colStyle + '>Time</th>' +
-      '<th ' + colStyle + ' style="text-align:center;">Duration</th>' +
-      '<th ' + colStyle + ' style="text-align:center;">Price</th>' +
-      '<th ' + colStyle + '>Register</th>' +
-    '</tr>' +
-
-    dataRows +
-
-    /* Footer */
-    '<tr><td colspan="11" style="padding:12px 16px;font-size:10px;color:#CCC;' +
-      'border-top:2px solid #F0F0F0;">' +
-      "All events are indicative · by L'Oréal Professionnel" +
-    '</td></tr>' +
-
-    '</table></body></html>';
-
-  var blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8' });
-  var url  = URL.createObjectURL(blob);
-  var a    = document.createElement('a');
-  a.href     = url;
-  a.download = 'loreal-calendar-' + displayYear + '.xls';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
 }
 
 </script>
