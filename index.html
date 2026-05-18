@@ -169,6 +169,11 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
 .pill-title{display:block;line-height:1.3;}
 .pill-date{display:block;font-size:9px;font-weight:500;opacity:0.65;margin-top:3px;letter-spacing:0.2px;}
 
+/* ── YEARLY TYPE FILTER BAR ── */
+.yearly-type-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;align-items:center;}
+.type-filter-btn{padding:8px 22px;border-radius:30px;border:2px solid;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.4px;background:#FFF;}
+.type-filter-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.12);}
+
 </style>
 </head>
 <body>
@@ -192,7 +197,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
   <h2 class="section-title">Full-Year <span>Brand Activation</span> Snapshot</h2>
   <div id="loading-yearly" class="loading-box"><span class="spinner">⏳</span><br><br>Loading calendar...</div>
   <div id="yearly-content" style="display:none">
-    <div id="legend" class="brand-legend"></div>
+    <div id="yearly-type-filter" class="yearly-type-bar"></div>
     <div class="year-nav">
       <button class="year-btn" id="btn-prev-year" onclick="changeYear(-1)">◀</button>
       <span class="year-display" id="year-display"></span>
@@ -257,6 +262,7 @@ var brandOrder   = [];   // preserves CSV row order for swimlane
 var allEvents    = [];   // all parsed event rows
 var activeFilter = 'All';
 var displayYear  = new Date().getFullYear();
+var activeSwimlaneType = 'All';
 var availableYears = [];
 
 var today          = getTodayStr();
@@ -437,7 +443,7 @@ function initApp(metaRows, brandsRows, eventsRows, datesRows) {
     (meta.subtitle || '') + (meta.updated ? ' · Updated ' + meta.updated : '');
 
   /* — render both views — */
-  buildLegend();
+  buildYearlyTypeFilter();
   buildSwimlane();
   buildStats();
   buildFilters();
@@ -446,24 +452,6 @@ function initApp(metaRows, brandsRows, eventsRows, datesRows) {
   /* — reveal content — */
   hide('loading-yearly'); show('yearly-content');
   hide('loading-weeks');  show('weeks-content');
-}
-
-/* ══════════════════════════════════════════
-   7. LEGEND
-══════════════════════════════════════════ */
-function buildLegend() {
-  var leg = document.getElementById('legend');
-  leg.innerHTML = '';
-  brandOrder.forEach(function(key) {
-    var b = brandLookup[key];
-    if (!b) return;
-    var p = el('div', 'legend-pill');
-    p.innerHTML = '<div class="legend-dot" style="background:' + b.brandColor + '"></div>' + b.brandName;
-    leg.appendChild(p);
-  });
-  var t = el('div', 'type-legend');
-  t.innerHTML = '<span>■ Launch</span><span>■ Education</span><span>■ Campaign</span><span>■ Community</span>';
-  leg.appendChild(t);
 }
 
 /* ══════════════════════════════════════════
@@ -533,6 +521,7 @@ function buildSwimlane() {
           pill.style.color           = brand.brandColor === '#1A1A1A' ? '#333' : brand.brandColor;
           pill.style.borderLeftColor = brand.brandColor;
           pill.style.cursor = 'pointer';
+          pill.setAttribute('data-type', ev.classType);
           pill.addEventListener('click', (function(evData){ return function(){ showPDP(evData); }; })(ev));
 
           /* tooltip includes artist if present */
@@ -567,6 +556,7 @@ function changeYear(dir) {
   if (idx < 0 || idx >= availableYears.length) return;
   displayYear = availableYears[idx];
   buildSwimlane();
+  filterSwimlaneByType(activeSwimlaneType); // re-apply active filter to new pills
 }
 
 /* ══════════════════════════════════════════
@@ -881,6 +871,61 @@ function formatPillDate(dateStr) {
   if (parts.length !== 3) return dateStr;
   var names = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   return parseInt(parts[0]) + ' ' + (names[parseInt(parts[1]) - 1] || '');
+}
+
+/* ══════════════════════════════════════════
+   YEARLY TYPE FILTER
+══════════════════════════════════════════ */
+var YEARLY_TYPE_DEFS = [
+  { key:'All',       label:'All Events', activeColor:'#1A1A1A', lightBg:'#F0F0F0', borderColor:'#CCC',     textColor:'#555'    },
+  { key:'Launch',    label:'■ Launch',    activeColor:'#B8600A', lightBg:'#FFF0E0', borderColor:'#B8600A',  textColor:'#B8600A' },
+  { key:'Education', label:'■ Education', activeColor:'#0044AA', lightBg:'#E8F0FF', borderColor:'#0044AA',  textColor:'#0044AA' },
+  { key:'Campaign',  label:'■ Campaign',  activeColor:'#CC0022', lightBg:'#FFE8E8', borderColor:'#CC0022',  textColor:'#CC0022' },
+  { key:'Community', label:'■ Community', activeColor:'#2D6A3F', lightBg:'#E8F5EC', borderColor:'#2D6A3F',  textColor:'#2D6A3F' }
+];
+
+function buildYearlyTypeFilter() {
+  var bar = document.getElementById('yearly-type-filter');
+  if (!bar) return;
+  bar.innerHTML = '';
+
+  YEARLY_TYPE_DEFS.forEach(function(t) {
+    var btn = document.createElement('button');
+    btn.className = 'type-filter-btn';
+    btn.setAttribute('data-type', t.key);
+    btn.textContent = t.label;
+    applyTypeButtonStyle(btn, t, t.key === activeSwimlaneType);
+    btn.addEventListener('click', function() { filterSwimlaneByType(t.key); });
+    bar.appendChild(btn);
+  });
+}
+
+function applyTypeButtonStyle(btn, def, isActive) {
+  if (isActive) {
+    btn.style.background   = def.activeColor;
+    btn.style.color        = '#FFF';
+    btn.style.borderColor  = def.activeColor;
+  } else {
+    btn.style.background   = def.lightBg;
+    btn.style.color        = def.textColor;
+    btn.style.borderColor  = def.borderColor;
+  }
+}
+
+function filterSwimlaneByType(type) {
+  activeSwimlaneType = type;
+
+  /* update button appearance */
+  document.querySelectorAll('.type-filter-btn').forEach(function(btn) {
+    var def = YEARLY_TYPE_DEFS.find(function(d) { return d.key === btn.getAttribute('data-type'); });
+    if (def) applyTypeButtonStyle(btn, def, def.key === type);
+  });
+
+  /* show / hide pills */
+  document.querySelectorAll('#swimlane-table .event-pill').forEach(function(pill) {
+    pill.style.display =
+      (type === 'All' || pill.getAttribute('data-type') === type) ? 'block' : 'none';
+  });
 }
 
 </script>
