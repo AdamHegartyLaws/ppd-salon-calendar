@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>L'Oréal Professionnel | 2026 Activation Calendar</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;min-height:100vh;}
+
+/* HEADER */
+.site-header{background:#1A1A1A;padding:24px 36px 16px;border-bottom:3px solid #C8A84B;}
+.eyebrow{font-size:10px;letter-spacing:3px;color:#C8A84B;text-transform:uppercase;margin-bottom:4px;}
+.site-header h1{font-size:22px;font-weight:700;color:#FFF;}
+.site-header h1 span{color:#C8A84B;}
+.subtitle{font-size:12px;color:#888;margin-top:4px;}
+
+/* TABS */
+.tab-bar{display:flex;gap:8px;background:#1A1A1A;padding:0 36px 16px;}
+.tab-btn{padding:9px 22px;border-radius:30px;border:none;cursor:pointer;font-size:13px;font-weight:600;letter-spacing:0.4px;transition:all 0.2s;}
+.tab-btn.active{background:#C8A84B;color:#1A1A1A;}
+.tab-btn:not(.active){background:#2E2E2E;color:#AAA;}
+.tab-btn:not(.active):hover{background:#3E3E3E;color:#FFF;}
+
+/* VIEWS */
+.view{display:none;padding:32px 36px 60px;}
+.view.active{display:block;}
+.section-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#888;margin-bottom:6px;}
+.section-title{font-size:24px;font-weight:700;color:#1A1A1A;margin-bottom:24px;}
+.section-title span{color:#C8A84B;}
+
+/* LEGEND */
+.brand-legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;align-items:center;}
+.legend-pill{display:flex;align-items:center;gap:7px;background:#FFF;border-radius:30px;padding:6px 14px;font-size:12px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.07);}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.type-legend{margin-left:auto;display:flex;gap:14px;font-size:11px;color:#888;}
+
+/* SWIMLANE TABLE */
+.table-wrap{background:#FFF;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow-x:auto;}
+.swimlane-table{width:100%;border-collapse:collapse;min-width:1000px;}
+.swimlane-table th{background:#1A1A1A;color:#FFF;padding:12px 8px;font-size:11px;font-weight:600;letter-spacing:0.4px;text-align:center;border-right:1px solid #2E2E2E;}
+.swimlane-table th.brand-col{text-align:left;padding-left:14px;color:#C8A84B;min-width:130px;}
+.swimlane-table th.current-m{color:#C8A84B;}
+.swimlane-table td{padding:8px 6px;border-right:1px solid #F0F0F0;border-bottom:1px solid #F0F0F0;vertical-align:top;}
+.swimlane-table td.brand-label{background:#FAFAFA;padding:10px 14px;border-right:1px solid #E0E0E0;white-space:nowrap;}
+.swimlane-table td.current-m{background:rgba(200,168,75,0.04);}
+.swimlane-table tr:hover td{background:#FAFEFF;}
+.swimlane-table tr:hover td.brand-label{background:#F5F5F5;}
+.b-icon{font-size:16px;display:block;margin-bottom:3px;}
+.b-name{font-size:11px;font-weight:700;}
+.event-pill{display:block;border-radius:5px;padding:4px 7px;font-size:10px;font-weight:600;line-height:1.3;margin-bottom:4px;border-left:3px solid;cursor:default;transition:transform 0.15s;position:relative;}
+.event-pill:hover{transform:scale(1.04);z-index:10;}
+.event-pill .tt{display:none;position:absolute;z-index:200;top:calc(100% + 5px);left:0;background:#1A1A1A;color:#FFF;font-size:11px;padding:7px 10px;border-radius:6px;white-space:nowrap;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,0.3);font-weight:400;}
+.event-pill:hover .tt{display:block;}
+
+/* 8 WEEKS */
+.stats-bar{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px;}
+.stat-pill{background:#FFF;border-radius:10px;padding:14px 20px;box-shadow:0 4px 16px rgba(0,0,0,0.07);text-align:center;flex:1;min-width:90px;}
+.stat-num{font-size:28px;font-weight:800;margin-bottom:2px;}
+.stat-label{font-size:10px;color:#888;letter-spacing:1px;text-transform:uppercase;}
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;}
+.filter-chip{padding:7px 16px;border-radius:30px;border:2px solid #DDD;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;background:#FFF;color:#555;}
+.filter-chip.active-chip{background:#1A1A1A;color:#FFF;border-color:#1A1A1A;}
+.filter-chip:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.12);}
+.week-block{margin-bottom:40px;}
+.week-header{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.week-number{background:#1A1A1A;color:#C8A84B;font-size:11px;font-weight:700;letter-spacing:1.5px;padding:5px 12px;border-radius:20px;text-transform:uppercase;white-space:nowrap;}
+.week-dates{font-size:15px;font-weight:700;color:#1A1A1A;}
+.week-divider{flex:1;height:1px;background:#E0E0E0;}
+.event-count{font-size:11px;color:#888;white-space:nowrap;}
+.today-tag{display:inline-block;background:#E4002B;color:#FFF;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:1px;margin-left:8px;vertical-align:middle;}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;}
+.event-card{border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);transition:transform 0.2s,box-shadow 0.2s;background:#FFF;}
+.event-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.13);}
+.card-strip{height:6px;width:100%;}
+.card-body{padding:18px 20px 18px;}
+.card-brand-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.card-brand-icon{font-size:18px;}
+.card-brand-name{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#888;}
+.card-type-badge{margin-left:auto;font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:0.8px;text-transform:uppercase;}
+.card-title{font-size:16px;font-weight:700;color:#1A1A1A;margin-bottom:6px;line-height:1.3;}
+.card-date{font-size:12px;color:#666;margin-bottom:8px;}
+.card-desc{font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;}
+.card-location{font-size:11px;color:#888;margin-bottom:14px;}
+.card-cta{display:inline-block;padding:9px 18px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;letter-spacing:0.5px;transition:opacity 0.2s;}
+.card-cta:hover{opacity:0.82;}
+.member-badge{display:inline-block;font-size:9px;font-weight:700;border:1px solid #C9A84C;color:#C9A84C;padding:2px 8px;border-radius:3px;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
+.free-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;background:#EAF2FF;color:#0057A8;padding:3px 8px;border-radius:3px;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px;}
+.dark-card{background:#1C1C1C !important;}
+.dark-card .card-title{color:#F5F0E8;}
+.dark-card .card-date{color:#C9A84C;}
+.dark-card .card-desc{color:#AAA;}
+.dark-card .card-location{color:#777;}
+.dark-card .card-brand-name{color:#666;}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="eyebrow">L'Oréal Professionnel Portfolio</div>
+  <h1>2026 <span>Activation Calendar</span></h1>
+  <div class="subtitle">All brands · Australia · Updated 18 May 2026</div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab-yearly" onclick="switchView('yearly')">📅 Yearly Snapshot</button>
+  <button class="tab-btn" id="tab-weeks" onclick="switchView('weeks')">🔍 Next 8 Weeks</button>
+</div>
+
+<!-- VIEW 1: YEARLY -->
+<div id="view-yearly" class="view active">
+  <div class="section-label">2026 Overview</div>
+  <h2 class="section-title">Full-Year <span>Brand Activation</span> Snapshot</h2>
+  <div class="brand-legend" id="legend"></div>
+  <div class="table-wrap">
+    <table class="swimlane-table" id="swimlane-table"></table>
+  </div>
+  <p style="font-size:11px;color:#AAA;margin-top:12px;text-align:right;">Hover over any event pill for details · All events are indicative · by L'Oréal Professionnel</p>
+</div>
+
+<!-- VIEW 2: 8 WEEKS -->
+<div id="view-weeks" class="view">
+  <div class="section-label">Detailed View</div>
+  <h2 class="section-title">Next <span>8 Weeks</span> — What's Coming Up</h2>
+  <div class="stats-bar" id="stats-bar"></div>
+  <div class="filter-bar" id="filter-bar"></div>
+  <div id="weeks-container"></div>
+  <p style="font-size:11px;color:#AAA;margin-top:20px;text-align:right;">All events indicative · Dates subject to change · by L'Oréal Professionnel</p>
+</div>
+
+<script>
+/* ── TAB SWITCH ── */
+function switchView(v) {
+  document.querySelectorAll('.view').forEach(function(el){ el.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(el){ el.classList.remove('active'); });
+  document.getElementById('view-' + v).classList.add('active');
+  document.getElementById('tab-' + v).classList.add('active');
+}
+
+/* ── BRAND DATA ── */
+var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var CURRENT_MONTH = 4;
+
+var BRANDS = [
+  {
+    key:'redken', name:'Redken', icon:'🔬', color:'#E4002B',
+    events:[
+      {month:0, title:'pH-Bonder Pro Launch', type:'Launch', tip:'National product launch across all salons'},
+      {month:1, title:'Science Series Masterclass', type:'Education', tip:'Sydney — 2-day technical education event'},
+      {month:3, title:'Acidic Bonding Campaign', type:'Campaign', tip:'Digital + in-salon consumer campaign'},
+      {month:4, title:'Exchange Summit', type:'Education', tip:'Redken Exchange Education Summit — Melbourne'},
+      {month:4, title:'pH Webinar Series', type:'Education', tip:'3-part online webinar — Bond science deep dive'},
+      {month:7, title:'Shades EQ Gloss Drop', type:'Launch', tip:'Limited edition gloss shades — retailer exclusive'},
+      {month:9, title:'Science Series Melbourne', type:'Education', tip:'Masterclass & hands-on workshop'},
+      {month:10, title:'Holiday Retail Push', type:'Campaign', tip:'End-of-year gift set campaign'}
+    ]
+  },
+  {
+    key:'biolage', name:'Biolage', icon:'🌿', color:'#4A7C59',
+    events:[
+      {month:1, title:'Botanical Ritual Workshop', type:'Education', tip:'Brisbane — intimate workshop for 20 stylists'},
+      {month:3, title:'Earth Day Campaign', type:'Community', tip:'Sustainability milestone + social content'},
+      {month:4, title:'HydraSource Summer Launch', type:'Launch', tip:'New summer hydration range — national rollout'},
+      {month:6, title:'Harvest Workshop Series', type:'Education', tip:'5-city tour — seasonal ritual education'},
+      {month:8, title:'R.A.W. Texture Launch', type:'Launch', tip:'New R.A.W. texture ritual product range'},
+      {month:10, title:'Festive Gift Sets', type:'Campaign', tip:'Botanical gift set retail campaign'}
+    ]
+  },
+  {
+    key:'pureology', name:'Pureology', icon:'💜', color:'#5C3D6E',
+    events:[
+      {month:0, title:'ZeroSulfate® Webinar', type:'Education', tip:'Free certification webinar for colorists'},
+      {month:2, title:'Colour Protect Masterclass', type:'Education', tip:'Exclusive colorist masterclass — Sydney'},
+      {month:4, title:'Hydrate Sheer Launch', type:'Launch', tip:'New lightweight hydration system launch'},
+      {month:6, title:'Vegan Beauty Summit', type:'Community', tip:'Annual vegan/sustainability summit'},
+      {month:8, title:'AntiFade Campaign', type:'Campaign', tip:'Consumer-facing AntiFade awareness campaign'},
+      {month:10, title:'Holiday Colour Protect', type:'Launch', tip:'Limited holiday Colour Protect collection'}
+    ]
+  },
+  {
+    key:'kerastase', name:'Kérastase', icon:'✨', color:'#C9A84C',
+    events:[
+      {month:1, title:'Elixir Ultime Reveal', type:'Launch', tip:'Sydney Atelier unveiling — invitation only'},
+      {month:3, title:'Première Capsule Drop', type:'Launch', tip:'Exclusive capsule — curated salon partners only'},
+      {month:5, title:'Chronologiste Launch', type:'Launch', tip:'Luxury anti-ageing range national launch'},
+      {month:5, title:'Blond Absolu Atelier', type:'Education', tip:'Invitation-only colorist experience — Melbourne'},
+      {month:7, title:'Fashion Week Campaign', type:'Campaign', tip:'Blond Absolu fashion week editorial campaign'},
+      {month:9, title:'Genesis Unveiling', type:'Launch', tip:'Genesis Fortifiant — exclusive salon unveiling'},
+      {month:11, title:'Holiday Couture Collection', type:'Launch', tip:'Festive luxury collection — premium gifting'}
+    ]
+  },
+  {
+    key:'lp', name:"L'Oréal Pro", icon:'⭐', color:'#1A1A1A',
+    events:[
+      {month:0, title:'Colour Trophy Opens', type:'Community', tip:'2026 Colour Trophy competition opens for entries'},
+      {month:2, title:'World Creative Awards', type:'Community', tip:'Nominations open — stylists submit their work'},
+      {month:4, title:'INOA Colour Campaign', type:'Campaign', tip:'INOA ammonia-free national campaign launch'},
+      {month:5, title:'Academy Education Month', type:'Education', tip:'June — full month of national education events'},
+      {month:7, title:'Colour Trophy Regionals', type:'Community', tip:'Regional final heats — Sydney, Melbourne, Brisbane'},
+      {month:9, title:'World Creative Awards Gala', type:'Community', tip:'Annual gala — national winner announcements'},
+      {month:10, title:'Salon Business Summit', type:'Education', tip:'2-day summit for salon owners + stylists'}
+    ]
+  },
+  {
+    key:'matrix', name:'Matrix', icon:'🔶', color:'#F26522',
+    events:[
+      {month:0, title:'Total Results Style Drop', type:'Launch', tip:'New Total Results styling range — social-first launch'},
+      {month:2, title:'SoColor Vivids Launch', type:'Launch', tip:'Vivids expansion — 12 new shades'},
+      {month:4, title:'Mega Sleek Curl Campaign', type:'Campaign', tip:'Curl + texture consumer campaign — UGC push'},
+      {month:5, title:'Live Demo Tour — Brisbane', type:'Education', tip:'High-energy live demo — 300 stylists'},
+      {month:5, title:'Live Demo Tour — Sydney', type:'Education', tip:'High-energy live demo — 400 stylists'},
+      {month:7, title:'Back-to-School Texture Drop', type:'Launch', tip:'Texture + curl back-to-school hype campaign'},
+      {month:9, title:'Halloween Vivids Push', type:'Campaign', tip:'Bold vivid colour social campaign — Halloween'},
+      {month:10, title:'Holiday Bold Drop', type:'Launch', tip:'Holiday gift sets — vivid + bold range'}
+    ]
+  },
+  {
+    key:'proconnect', name:'Pro.Connect', icon:'👑', color:'#C9A84C',
+    events:[
+      {month:2, title:'Business Forum Preview', type:'Community', tip:'Member early-access — Business Forum agenda reveal'},
+      {month:4, title:'Member Summit — Melbourne', type:'Community', tip:'Exclusive paid-tier member summit'},
+      {month:7, title:'Business Forum', type:'Community', tip:'Flagship Business Forum — Aug 30–Sep 1, Melbourne'},
+      {month:9, title:'Networking Dinner Series', type:'Community', tip:'5-city exclusive member networking dinners'},
+      {month:10, title:'Year-End Strategy Session', type:'Education', tip:'Members-only year-end planning workshop'}
+    ]
+  },
+  {
+    key:'academy', name:'Business Academy', icon:'📘', color:'#0057A8',
+    events:[
+      {month:0, title:'Free Webinar — Social Media', type:'Education', tip:'Free: Social media for salon businesses'},
+      {month:1, title:'Business Fundamentals', type:'Education', tip:'Module opens — free online enrolment'},
+      {month:3, title:'Free Workshop — Pricing', type:'Education', tip:'Free: How to price your salon services'},
+      {month:5, title:'Client Retention Webinar', type:'Education', tip:'Free webinar — building loyal clientele'},
+      {month:7, title:'Team Leadership Module', type:'Education', tip:'New free online module launch'},
+      {month:9, title:'Free Certification Launch', type:'Education', tip:'Salon Management certification — free enrol'},
+      {month:10, title:'Year-End Learning Review', type:'Community', tip:'Community wrap-up + 2027 curriculum preview'}
+    ]
+  }
+];
+
+/* ── BUILD LEGEND ── */
+function buildLegend() {
+  var leg = document.getElementById('legend');
+  BRANDS.forEach(function(b) {
+    var pill = document.createElement('div');
+    pill.className = 'legend-pill';
+    pill.innerHTML = '<div class="legend-dot" style="background:' + b.color + '"></div>' + b.name;
+    leg.appendChild(pill);
+  });
+  var types = document.createElement('div');
+  types.className = 'type-legend';
+  types.innerHTML = '<span>■ Launch</span><span>■ Education</span><span>■ Campaign</span><span>■ Community</span>';
+  leg.appendChild(types);
+}
+
+/* ── BUILD SWIMLANE TABLE ── */
+function buildSwimlane() {
+  var table = document.getElementById('swimlane-table');
+
+  // Header row
+  var thead = document.createElement('thead');
+  var headerRow = document.createElement('tr');
+
+  var th0 = document.createElement('th');
+  th0.className = 'brand-col';
+  th0.textContent = 'BRAND';
+  headerRow.appendChild(th0);
+
+  MONTHS.forEach(function(m, i) {
+    var th = document.createElement('th');
+    th.textContent = m;
+    if (i === CURRENT_MONTH) th.className = 'current-m';
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  // Body rows
+  var tbody = document.createElement('tbody');
+
+  BRANDS.forEach(function(brand) {
+    var tr = document.createElement('tr');
+
+    // Brand label cell
+    var tdLabel = document.createElement('td');
+    tdLabel.className = 'brand-label';
+    tdLabel.innerHTML = '<span class="b-icon">' + brand.icon + '</span><span class="b-name" style="color:' + brand.color + '">' + brand.name + '</span>';
+    tr.appendChild(tdLabel);
+
+    // Month cells
+    MONTHS.forEach(function(m, mi) {
+      var td = document.createElement('td');
+      if (mi === CURRENT_MONTH) td.className = 'current-m';
+
+      var eventsInMonth = brand.events.filter(function(e) { return e.month === mi; });
+
+      eventsInMonth.forEach(function(ev) {
+        var pill = document.createElement('span');
+        pill.className = 'event-pill';
+
+        // Pill background: light tint of brand colour
+        var bgMap = {
+          'Launch':    '20',
+          'Education': '18',
+          'Campaign':  '16',
+          'Community': '14'
+        };
+        var alpha = bgMap[ev.type] || '18';
+
+        pill.style.background = brand.color + alpha;
+        pill.style.color = (brand.color === '#1A1A1A') ? '#333' : brand.color;
+        pill.style.borderLeftColor = brand.color;
+
+        pill.innerHTML = ev.title + '<span class="tt">📌 ' + ev.type + ' — ' + ev.tip + '</span>';
+        td.appendChild(pill);
+      });
+
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(tbody);
+}
+
+/* ── 8 WEEKS DATA ── */
+var WEEKS = [
+  {
+    week:1, range:'May 18 – 24, 2026', isNow:true,
+    events:[
+      {brand:'redken',brandName:'Redken',icon:'🔬',color:'#E4002B',textColor:'#FFF',type:'Education',
+       date:'Tue 19 May',title:'pH-Bonding Science Webinar',
+       desc:'Deep-dive online session covering Acidic Bonding Concentrate technology and pH science. Learn how to prescribe the right ritual for every client.',
+       location:'📍 Online — Zoom',cta:'Register Free'},
+      {brand:'biolage',brandName:'Biolage',icon:'🌿',color:'#4A7C59',textColor:'#FFF',type:'Launch',
+       date:'Thu 22 May',title:'HydraSource Summer Launch',
+       desc:'Aloe-powered formulas designed for thirsty hair in warm weather. In-salon demo kits arrive this week — get your clients summer-ready.',
+       location:'📍 National — All Partner Salons',cta:'View Launch Kit'},
+      {brand:'academy',brandName:'Business Academy',icon:'📘',color:'#0057A8',textColor:'#FFF',type:'Education',isFree:true,
+       date:'Wed 21 May',title:'Free Webinar: Pricing Your Services',
+       desc:'Learn how to price your services, communicate your value and increase your average bill per client — without losing loyalty. 100% free.',
+       location:'📍 Online — Microsoft Teams',cta:'Enrol Now — Free'}
+    ]
+  },
+  {
+    week:2, range:'May 25 – 31, 2026',
+    events:[
+      {brand:'pureology',brandName:'Pureology',icon:'💜',color:'#5C3D6E',textColor:'#FFF',type:'Launch',
+       date:'Tue 27 May',title:'Hydrate Sheer — Nationwide Launch',
+       desc:'A featherweight, vegan hydration system for fine, colour-treated hair. Zero sulfates. Zero weight. Full luminosity. Stylist unboxing experiences begin.',
+       location:'📍 National — Partner Salons',cta:'Explore Hydrate Sheer'},
+      {brand:'matrix',brandName:'Matrix',icon:'🔶',color:'#F26522',textColor:'#FFF',type:'Campaign',
+       date:'Thu 29 May',title:'Mega Sleek Curl Campaign Kicks Off',
+       desc:"Curl season is here. Share your best curl transformations with #MatrixCurlAU for a chance to be spotlighted on Matrix's national social channels.",
+       location:'📍 Nationwide + Social Media',cta:'Join the Campaign'},
+      {brand:'lp',brandName:"L'Oréal Pro",icon:'⭐',color:'#1A1A1A',textColor:'#FFF',type:'Campaign',
+       date:'Wed 28 May',title:'INOA Colour — National Campaign Launch',
+       desc:'The INOA ammonia-free colour campaign rolls out nationally. Point-of-sale materials, digital assets and sampling kits now available via the salon portal.',
+       location:'📍 National — All Salons',cta:'Access Campaign Assets'}
+    ]
+  },
+  {
+    week:3, range:'Jun 1 – 7, 2026',
+    events:[
+      {brand:'kerastase',brandName:'Kérastase',icon:'✨',color:'#C9A84C',textColor:'#0D0D0D',type:'Launch',
+       date:'Wed 3 Jun',title:'Chronologiste — Luxury Launch',
+       desc:"Kérastase's most prestigious anti-ageing ritual makes its Australian debut. Atelier experiences for your most discerning clients begin in Sydney — invitation only.",
+       location:'📍 Sydney — Invitation-Only Atelier',cta:'Request Invitation'},
+      {brand:'proconnect',brandName:'Pro.Connect',icon:'👑',color:'#C9A84C',textColor:'#F5F0E8',type:'Community',isProConnect:true,
+       date:'Thu 5 Jun',title:'Member Networking Dinner — Sydney',
+       desc:"An exclusive evening for Pro.Connect members. Hear from Australia's top salon owners on scaling businesses and winning the client experience race.",
+       location:'📍 Quay Restaurant, Sydney',cta:'Reserve Your Seat'},
+      {brand:'redken',brandName:'Redken',icon:'🔬',color:'#E4002B',textColor:'#FFF',type:'Education',
+       date:'Wed 4 Jun',title:'Redken Exchange Summit — Melbourne',
+       desc:'2-day immersive education event covering colour science, bonding chemistry and the latest techniques. Hands-on workshops with Redken educators.',
+       location:'📍 Crown Conference Centre, Melbourne',cta:'Book Your Place'}
+    ]
+  },
+  {
+    week:4, range:'Jun 8 – 14, 2026',
+    events:[
+      {brand:'academy',brandName:'Business Academy',icon:'📘',color:'#0057A8',textColor:'#FFF',type:'Education',isFree:true,
+       date:'Wed 10 Jun',title:'Free Webinar: Client Retention Masterclass',
+       desc:'How do you turn a one-time booking into a client for life? Covers rebooking strategies, loyalty programs and personalising the salon experience.',
+       location:'📍 Online — Microsoft Teams',cta:'Save Your Spot — Free'},
+      {brand:'matrix',brandName:'Matrix',icon:'🔶',color:'#F26522',textColor:'#FFF',type:'Education',
+       date:'Thu 12 Jun',title:'Matrix Live Demo Tour — Brisbane',
+       desc:'High energy. Live colour, cut and texture demos from Matrix artists. Open to all stylists — bring your whole team.',
+       location:'📍 The Tivoli, Brisbane',cta:'Get Tickets'},
+      {brand:'biolage',brandName:'Biolage',icon:'🌿',color:'#4A7C59',textColor:'#FFF',type:'Education',
+       date:'Thu 11 Jun',title:'Harvest Workshop Series — Brisbane',
+       desc:'An intimate, hands-on ritual workshop for 20 stylists. Explore the full botanical ritual range through sensory education.',
+       location:'📍 Brisbane CBD Studio',cta:'Apply for a Place'}
+    ]
+  },
+  {
+    week:5, range:'Jun 15 – 21, 2026',
+    events:[
+      {brand:'lp',brandName:"L'Oréal Pro",icon:'⭐',color:'#1A1A1A',textColor:'#FFF',type:'Education',
+       date:'Mon 15 Jun',title:"L'Oréal Academy Education Month Begins",
+       desc:"June is Education Month. All month long — national events, webinars and in-salon workshops across colour, cut, finish and business. Check the full schedule.",
+       location:'📍 Nationwide + Online',cta:'View Full Schedule'},
+      {brand:'kerastase',brandName:'Kérastase',icon:'✨',color:'#C9A84C',textColor:'#0D0D0D',type:'Education',
+       date:'Thu 19 Jun',title:'Blond Absolu Colorist Atelier',
+       desc:'An invitation-only colorist experience exploring the full Blond Absolu ritual. Hosted by a Kérastase international educator. Eight places only.',
+       location:'📍 Melbourne Atelier',cta:'Request Invitation'},
+      {brand:'pureology',brandName:'Pureology',icon:'💜',color:'#5C3D6E',textColor:'#FFF',type:'Campaign',
+       date:'Wed 18 Jun',title:'AntiFade Campaign — Social Launch',
+       desc:'The AntiFade campaign goes live for clients. Equip your salon with digital assets, in-store posters and tester kits to drive retail conversations.',
+       location:'📍 National + Social Media',cta:'Access Campaign Kit'}
+    ]
+  },
+  {
+    week:6, range:'Jun 22 – 28, 2026',
+    events:[
+      {brand:'redken',brandName:'Redken',icon:'🔬',color:'#E4002B',textColor:'#FFF',type:'Education',
+       date:'Wed 24 Jun',title:'pH-Bonder Masterclass — Melbourne',
+       desc:'In-depth technical masterclass covering the full Acidic Bonding Concentrate range. Hands-on colour applications and live model work. Limited to 30 stylists.',
+       location:'📍 Redken Studio, Melbourne',cta:'Book Now'},
+      {brand:'proconnect',brandName:'Pro.Connect',icon:'👑',color:'#C9A84C',textColor:'#F5F0E8',type:'Education',isProConnect:true,
+       date:'Thu 25 Jun',title:"Member Workshop: Scaling Your Salon",
+       desc:"For ambitious salon owners ready to grow. Half-day workshop covers financial planning, team structure and the systems Australia's fastest-growing salons use.",
+       location:'📍 Pro.Connect Space, Sydney',cta:'Members: Reserve Spot'},
+      {brand:'matrix',brandName:'Matrix',icon:'🔶',color:'#F26522',textColor:'#FFF',type:'Education',
+       date:'Fri 26 Jun',title:'Matrix Live Demo Tour — Sydney',
+       desc:"The biggest show yet — 400 stylists, 6 live model stations, curl + colour + cut all on stage. Doors open 5:30PM.",
+       location:'📍 Hordern Pavilion, Sydney',cta:'Get Tickets'}
+    ]
+  },
+  {
+    week:7, range:'Jun 29 – Jul 5, 2026',
+    events:[
+      {brand:'lp',brandName:"L'Oréal Pro",icon:'⭐',color:'#1A1A1A',textColor:'#FFF',type:'Community',
+       date:'Tue 30 Jun',title:"Colour Trophy — Nominations Close",
+       desc:"Last chance to submit your Colour Trophy entry for 2026. Categories include Colour, Creative Colour and Young Colourist. Finalists announced July 14.",
+       location:'📍 Online — Entries Portal',cta:'Submit Your Entry'},
+      {brand:'academy',brandName:'Business Academy',icon:'📘',color:'#0057A8',textColor:'#FFF',type:'Education',isFree:true,
+       date:'Wed 1 Jul',title:'New Module Launch: Team Leadership',
+       desc:'A brand-new free online module — Team Leadership for Salon Professionals. Self-paced, 4 hours, with a completion certificate. Covers hiring and culture.',
+       location:'📍 Online — L\'Oréal Academy Portal',cta:'Enrol Now — Free'},
+      {brand:'biolage',brandName:'Biolage',icon:'🌿',color:'#4A7C59',textColor:'#FFF',type:'Launch',
+       date:'Thu 3 Jul',title:'R.A.W. Texture Ritual — Preview',
+       desc:'Exclusive early look at the upcoming R.A.W. Texture Ritual range for curly, wavy and coily hair. Preview packs available for partner salons to trial.',
+       location:'📍 Partner Salons — Preview Packs',cta:'Request Preview Pack'}
+    ]
+  },
+  {
+    week:8, range:'Jul 6 – 13, 2026',
+    events:[
+      {brand:'kerastase',brandName:'Kérastase',icon:'✨',color:'#C9A84C',textColor:'#0D0D0D',type:'Launch',
+       date:'Wed 8 Jul',title:'Genesis Fortifiant — Teaser Reveal',
+       desc:'First look at the new Genesis Fortifiant collection — a strengthening ritual rooted in the science of fragile hair. Partner salons receive the Discovery Box this week.',
+       location:'📍 Sydney + Online Reveal',cta:'View Teaser'},
+      {brand:'matrix',brandName:'Matrix',icon:'🔶',color:'#F26522',textColor:'#FFF',type:'Launch',
+       date:'Fri 10 Jul',title:'Back-to-School Texture Drop — Preview',
+       desc:"The biggest texture and curl drop of the year is coming. Preview packs hit salons — new Curl Please and Mega Sleek bundles plus fresh social content.",
+       location:'📍 National — All Salons',cta:'Preview the Drop'},
+      {brand:'redken',brandName:'Redken',icon:'🔬',color:'#E4002B',textColor:'#FFF',type:'Launch',
+       date:'Thu 9 Jul',title:'Shades EQ Gloss — Preview Event',
+       desc:'A special Shades EQ Gloss preview for partner salons ahead of the August national launch. Colour swatches, application guides and a virtual Q&A.',
+       location:'📍 Online + Select Partner Salons',cta:'Join Preview Event'}
+    ]
+  }
+];
+
+/* ── BUILD STATS BAR ── */
+function buildStats() {
+  var all = [];
+  WEEKS.forEach(function(w){ w.events.forEach(function(e){ all.push(e); }); });
+  var stats = [
+    {num: all.length, label:'Total Events', color:'#1A1A1A'},
+    {num: all.filter(function(e){return e.type==='Launch';}).length, label:'Launches', color:'#C9A84C'},
+    {num: all.filter(function(e){return e.type==='Education';}).length, label:'Education', color:'#0057A8'},
+    {num: all.filter(function(e){return e.type==='Campaign';}).length, label:'Campaigns', color:'#E4002B'},
+    {num: all.filter(function(e){return e.type==='Community';}).length, label:'Community', color:'#4A7C59'}
+  ];
+  var bar = document.getElementById('stats-bar');
+  stats.forEach(function(s){
+    var p = document.createElement('div');
+    p.className = 'stat-pill';
+    p.innerHTML = '<div class="stat-num" style="color:' + s.color + '">' + s.num + '</div><div class="stat-label">' + s.label + '</div>';
+    bar.appendChild(p);
+  });
+}
+
+/* ── BUILD FILTER BAR ── */
+var activeFilter = 'All';
+function buildFilters() {
+  var bar = document.getElementById('filter-bar');
+  var brandNames = ['All'];
+  BRANDS.forEach(function(b){ brandNames.push(b.name); });
+
+  brandNames.forEach(function(name) {
+    var chip = document.createElement('button');
+    chip.className = 'filter-chip' + (name === 'All' ? ' active-chip' : '');
+    chip.textContent = name;
+    chip.setAttribute('data-filter', name);
+
+    var bData = BRANDS.find(function(b){ return b.name === name; });
+    if (bData) { chip.style.borderColor = bData.color; chip.style.color = bData.color; }
+
+    chip.addEventListener('click', function() {
+      activeFilter = name;
+      document.querySelectorAll('.filter-chip').forEach(function(c){
+        c.classList.remove('active-chip');
+        c.style.background = '#FFF';
+        var bd = BRANDS.find(function(b){ return b.name === c.getAttribute('data-filter'); });
+        if (bd) { c.style.color = bd.color; c.style.borderColor = bd.color; }
+        else { c.style.color = '#555'; c.style.borderColor = '#DDD'; }
+      });
+      chip.classList.add('active-chip');
+      if (name === 'All') {
+        chip.style.background = '#1A1A1A'; chip.style.color = '#FFF'; chip.style.borderColor = '#1A1A1A';
+      } else {
+        chip.style.background = bData.color + '22';
+      }
+      renderWeeks();
+    });
+    bar.appendChild(chip);
+  });
+}
+
+/* ── RENDER WEEK CARDS ── */
+function renderWeeks() {
+  var container = document.getElementById('weeks-container');
+  container.innerHTML = '';
+
+  var typeBadge = {
+    'Launch':    {bg:'#FFF0E0', color:'#B8600A'},
+    'Education': {bg:'#E8F0FF', color:'#0044AA'},
+    'Campaign':  {bg:'#FFE8E8', color:'#CC0022'},
+    'Community': {bg:'#E8F5EC', color:'#2D6A3F'}
+  };
+
+  WEEKS.forEach(function(week) {
+    var evs = activeFilter === 'All' ? week.events : week.events.filter(function(e){ return e.brandName === activeFilter; });
+    if (evs.length === 0) return;
+
+    var block = document.createElement('div');
+    block.className = 'week-block';
+
+    var nowTag = week.isNow ? '<span class="today-tag">THIS WEEK</span>' : '';
+    block.innerHTML = '<div class="week-header"><span class="week-number">Week ' + week.week + '</span><span class="week-dates">' + week.range + nowTag + '</span><span class="week-divider"></span><span class="event-count">' + evs.length + ' event' + (evs.length !== 1 ? 's' : '') + '</span></div>';
+
+    var grid = document.createElement('div');
+    grid.className = 'cards-grid';
+
+    evs.forEach(function(ev) {
+      var card = document.createElement('div');
+      card.className = 'event-card' + (ev.isProConnect ? ' dark-card' : '');
+
+      var badge = typeBadge[ev.type] || {bg:'#F0F0F0', color:'#555'};
+      var extraBadge = '';
+      if (ev.isProConnect) extraBadge = '<div class="member-badge">👑 PRO.CONNECT MEMBER EVENT</div>';
+      else if (ev.isFree) extraBadge = '<div class="free-badge">🔓 FREE EDUCATION</div>';
+
+      card.innerHTML =
+        '<div class="card-strip" style="background:' + ev.color + '"></div>' +
+        '<div class="card-body">' +
+          '<div class="card-brand-row">' +
+            '<span class="card-brand-icon">' + ev.icon + '</span>' +
+            '<span class="card-brand-name">' + ev.brandName + '</span>' +
+            '<span class="card-type-badge" style="background:' + badge.bg + ';color:' + badge.color + '">' + ev.type + '</span>' +
+          '</div>' +
+          extraBadge +
+          '<div class="card-title">' + ev.title + '</div>' +
+          '<div class="card-date">📅 ' + ev.date + '</div>' +
+          '<div class="card-desc">' + ev.desc + '</div>' +
+          '<div class="card-location">' + ev.location + '</div>' +
+          '<button class="card-cta" style="background:' + ev.color + ';color:' + ev.textColor + '">' + ev.cta + ' →</button>' +
+        '</div>';
+
+      grid.appendChild(card);
+    });
+
+    block.appendChild(grid);
+    container.appendChild(block);
+  });
+}
+
+/* ── INIT ── */
+buildLegend();
+buildSwimlane();
+buildStats();
+buildFilters();
+renderWeeks();
+</script>
+</body>
+</html>
