@@ -136,6 +136,36 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
   .type-legend{margin-left:0;margin-top:8px;}
   .year-nav{justify-content:center;}
 }
+
+/* ── EVENT DETAIL MODAL (PDP) ── */
+.pdp-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;}
+.pdp-overlay.open{display:flex;}
+.pdp-wrap{position:relative;width:100%;max-width:580px;}
+.pdp-close{position:absolute;top:-14px;right:-14px;width:36px;height:36px;border-radius:50%;border:none;background:#FFF;color:#333;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.2);z-index:10;line-height:36px;text-align:center;transition:background 0.15s;}
+.pdp-close:hover{background:#F0F0F0;}
+.pdp-modal{background:#FFF;border-radius:16px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,0.35);animation:pdpIn 0.22s ease;}
+@keyframes pdpIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.pdp-strip{height:8px;border-radius:16px 16px 0 0;}
+.pdp-body{padding:28px 32px 32px;}
+.pdp-brand-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.pdp-brand-icon{font-size:22px;}
+.pdp-brand-name{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#999;}
+.pdp-type-badge{margin-left:auto;font-size:9px;font-weight:700;padding:4px 11px;border-radius:20px;letter-spacing:0.8px;text-transform:uppercase;}
+.pdp-title{font-size:22px;font-weight:800;color:#1A1A1A;line-height:1.25;margin-bottom:6px;}
+.pdp-artist{font-size:13px;color:#999;font-style:italic;margin-bottom:18px;}
+.pdp-meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+.pdp-meta-chip{display:flex;align-items:center;gap:5px;background:#F5F5F5;border-radius:7px;padding:7px 12px;font-size:12px;color:#555;font-weight:500;}
+.pdp-divider{height:1px;background:#F0F0F0;margin:20px 0;}
+.pdp-desc-eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#BBB;margin-bottom:10px;}
+.pdp-desc{font-size:14px;color:#444;line-height:1.7;}
+.pdp-cta-area{margin-top:28px;}
+.pdp-cta-btn{display:block;width:100%;padding:16px;border-radius:10px;font-size:15px;font-weight:700;text-align:center;cursor:pointer;border:none;letter-spacing:0.5px;transition:opacity 0.2s;text-decoration:none;}
+.pdp-cta-btn:hover{opacity:0.84;}
+.pdp-cta-btn[disabled]{opacity:0.45;cursor:not-allowed;}
+.pdp-no-link{text-align:center;font-size:11px;color:#BBB;margin-top:10px;}
+.pdp-free-chip{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;background:#EAF2FF;color:#0057A8;padding:3px 9px;border-radius:3px;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px;}
+.pdp-member-chip{display:inline-block;font-size:9px;font-weight:700;border:1px solid #C9A84C;color:#C9A84C;padding:3px 9px;border-radius:3px;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;}
+
 </style>
 </head>
 <body>
@@ -182,6 +212,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
     <div id="filter-bar" class="filter-bar"></div>
     <div id="weeks-container"></div>
     <p class="footer-note">All events indicative · Dates subject to change · by L'Oréal Professionnel</p>
+  </div>
+</div>
+
+<!-- ████ EVENT DETAIL MODAL ████ -->
+<div id="pdp-overlay" class="pdp-overlay" onclick="handlePDPOverlayClick(event)">
+  <div class="pdp-wrap">
+    <button class="pdp-close" onclick="closePDP()" title="Close">✕</button>
+    <div class="pdp-modal" id="pdp-modal"></div>
   </div>
 </div>
 
@@ -491,7 +529,9 @@ function buildSwimlane() {
           pill.style.background      = brand.brandColor + '1A';
           pill.style.color           = brand.brandColor === '#1A1A1A' ? '#333' : brand.brandColor;
           pill.style.borderLeftColor = brand.brandColor;
-
+          pill.style.cursor = 'pointer';
+          pill.addEventListener('click', (function(evData){ return function(){ showPDP(evData); }; })(ev));
+          
           /* tooltip includes artist if present */
           var tipArtist = ev.classArtists ? ' · ' + ev.classArtists : '';
           var tipPrice  = isFreeEvent(ev) ? ' · Free' : (ev.classPrice ? ' · $' + ev.classPrice : '');
@@ -743,6 +783,93 @@ function el(tag, cls) {
 }
 function hide(id) { document.getElementById(id).style.display = 'none'; }
 function show(id) { document.getElementById(id).style.display = 'block'; }
+
+/* ══════════════════════════════════════════
+   EVENT DETAIL PDP — open / close / render
+══════════════════════════════════════════ */
+
+function showPDP(ev) {
+  var brand   = brandLookup[ev.brandKey] || {};
+  var color   = brand.brandColor || '#1A1A1A';
+  var textCol = brand.textColor  || '#FFFFFF';
+  var procon  = isProConnectBrand(ev.brandKey);
+  var free    = isFreeEvent(ev);
+  var badge   = TYPE_BADGE[ev.classType] || { bg:'#F0F0F0', color:'#555' };
+
+  /* ── special badge ── */
+  var specialBadge = '';
+  if (procon) specialBadge = '<div class="pdp-member-chip">👑 PRO.CONNECT MEMBER EVENT</div>';
+  else if (free) specialBadge = '<div class="pdp-free-chip">🔓 FREE EVENT</div>';
+
+  /* ── artist line ── */
+  var artistLine = ev.classArtists
+    ? '<div class="pdp-artist">with ' + ev.classArtists + '</div>'
+    : '';
+
+  /* ── meta chips (date / location / price) ── */
+  var priceChip = '';
+  if (free) {
+    priceChip = '<div class="pdp-meta-chip">🔓 Free to attend</div>';
+  } else if (ev.classPrice) {
+    priceChip = '<div class="pdp-meta-chip">💰 $' + ev.classPrice + '</div>';
+  }
+
+  /* ── CTA button ── */
+  var ctaLabel = ev.classCTALabel || 'Register Now';
+  var ctaHtml  = ev.classLink
+    ? '<a class="pdp-cta-btn" href="' + ev.classLink + '" target="_blank" rel="noopener" ' +
+        'style="background:' + color + ';color:' + textCol + '">' + ctaLabel + ' →</a>'
+    : '<button class="pdp-cta-btn" disabled ' +
+        'style="background:' + color + ';color:' + textCol + '">' + ctaLabel + ' →</button>' +
+      '<p class="pdp-no-link">Registration link coming soon</p>';
+
+  /* ── build modal HTML ── */
+  document.getElementById('pdp-modal').innerHTML =
+    '<div class="pdp-strip" style="background:' + color + '"></div>' +
+    '<div class="pdp-body">' +
+      '<div class="pdp-brand-row">' +
+        '<span class="pdp-brand-icon">' + (brand.brandIcon || '') + '</span>' +
+        '<span class="pdp-brand-name">' + (brand.brandName || ev.brandKey) + '</span>' +
+        '<span class="pdp-type-badge" style="background:' + badge.bg + ';color:' + badge.color + '">' +
+          ev.classType +
+        '</span>' +
+      '</div>' +
+      specialBadge +
+      '<div class="pdp-title">' + ev.classTitle + '</div>' +
+      artistLine +
+      '<div class="pdp-meta-row">' +
+        '<div class="pdp-meta-chip">📅 ' + ev.classDate + '</div>' +
+        '<div class="pdp-meta-chip">📍 ' + ev.classLocation + '</div>' +
+        priceChip +
+      '</div>' +
+      '<div class="pdp-divider"></div>' +
+      '<div class="pdp-desc-eyebrow">About this event</div>' +
+      '<div class="pdp-desc">' +
+        (ev.classLongDescription || ev.classShortDescription || 'Details coming soon.') +
+      '</div>' +
+      '<div class="pdp-cta-area">' + ctaHtml + '</div>' +
+    '</div>';
+
+  /* ── show overlay ── */
+  document.getElementById('pdp-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePDP() {
+  document.getElementById('pdp-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handlePDPOverlayClick(e) {
+  /* only close if user clicked the dark backdrop itself, not the modal */
+  if (e.target === document.getElementById('pdp-overlay')) closePDP();
+}
+
+/* close on Escape key */
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closePDP();
+});
+
 </script>
 </body>
 </html>
