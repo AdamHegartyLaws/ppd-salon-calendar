@@ -277,8 +277,10 @@ var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov',
 var TYPE_BADGE = {
   'Launch':    { bg:'#FFF0E0', color:'#B8600A' },
   'Education': { bg:'#E8F0FF', color:'#0044AA' },
-  'Campaign':  { bg:'#FFE8E8', color:'#CC0022' },
-  'Community': { bg:'#E8F5EC', color:'#2D6A3F' }
+  'Pro Styling':  { bg:'#FFE8E8', color:'#CC0022' },
+  'Community': { bg:'#E8F5EC', color:'#2D6A3F' },
+  'Care Coach': { bg:'#EDE9FE', color:'#6D28D9' },
+  'Care Cadette': { bg:'#F5F0FF', color:'#A855F7' }
 };
 
 /* ══════════════════════════════════════════
@@ -609,8 +611,11 @@ function buildStats() {
     { num: upcoming.length,                                                    label: 'Total Events', color: '#1A1A1A' },
     { num: upcoming.filter(function(e){ return e.classType==='Launch'; }).length,    label: 'Launches',     color: '#C9A84C' },
     { num: upcoming.filter(function(e){ return e.classType==='Education'; }).length, label: 'Education',    color: '#0057A8' },
-    { num: upcoming.filter(function(e){ return e.classType==='Campaign'; }).length,  label: 'Campaigns',    color: '#E4002B' },
-    { num: upcoming.filter(function(e){ return e.classType==='Community'; }).length, label: 'Community',    color: '#4A7C59' }
+    { num: upcoming.filter(function(e){ return e.classType==='Pro Styling'; }).length,  label: 'Pro Styling',    color: '#E4002B' },
+    { num: upcoming.filter(function(e){ return e.classType==='Community'; }).length, label: 'Community',    color: '#4A7C59' },
+    { num: upcoming.filter(function(e){ return e.classType==='Care Coach'; }).length, label: 'Care Coach',   color: '#6D28D9' },
+    { num: upcoming.filter(function(e){ return e.classType==='Care Cadette'; }).length, label: 'Care Cadette', color: '#A855F7' }
+    
   ].forEach(function(s) {
     var p = el('div', 'stat-pill');
     p.innerHTML =
@@ -920,8 +925,10 @@ function formatPillDate(dateStr) {
 var YEARLY_TYPE_DEFS = [
   { key:'Launch',    label:'■ Launch',    activeColor:'#B8600A', lightBg:'#FFF0E0', borderColor:'#B8600A',  textColor:'#B8600A' },
   { key:'Education', label:'■ Education', activeColor:'#0044AA', lightBg:'#E8F0FF', borderColor:'#0044AA',  textColor:'#0044AA' },
-  { key:'Campaign',  label:'■ Campaign',  activeColor:'#CC0022', lightBg:'#FFE8E8', borderColor:'#CC0022',  textColor:'#CC0022' },
-  { key:'Community', label:'■ Community', activeColor:'#2D6A3F', lightBg:'#E8F5EC', borderColor:'#2D6A3F',  textColor:'#2D6A3F' }
+  { key:'Pro Styling',  label:'■ Pro Styling',  activeColor:'#CC0022', lightBg:'#FFE8E8', borderColor:'#CC0022',  textColor:'#CC0022' },
+  { key:'Community', label:'■ Community', activeColor:'#2D6A3F', lightBg:'#E8F5EC', borderColor:'#2D6A3F',  textColor:'#2D6A3F' },
+  { key:'Care Coach', label:'■ Care Coach', activeColor:'#6D28D9', lightBg:'#EDE9FE', borderColor:'#6D28D9', textColor:'#6D28D9' },
+  { key:'Care Cadette', label:'■ Care Cadette', activeColor:'#A855F7', lightBg:'#F5F0FF', borderColor:'#A855F7', textColor:'#7E22CE' }
 ];
 
 function buildYearlyTypeFilter() {
