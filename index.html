@@ -279,8 +279,7 @@ var TYPE_BADGE = {
   'Education': { bg:'#E8F0FF', color:'#0044AA' },
   'Pro Styling':  { bg:'#FFE8E8', color:'#CC0022' },
   'Community': { bg:'#E8F5EC', color:'#2D6A3F' },
-  'Care Coach': { bg:'#EDE9FE', color:'#6D28D9' },
-  'Care Cadette': { bg:'#F5F0FF', color:'#A855F7' }
+  'Care Coach': { bg:'#EDE9FE', color:'#6D28D9' }
 };
 
 /* ══════════════════════════════════════════
@@ -613,8 +612,7 @@ function buildStats() {
     { num: upcoming.filter(function(e){ return e.classType==='Education'; }).length, label: 'Education',    color: '#0057A8' },
     { num: upcoming.filter(function(e){ return e.classType==='Pro Styling'; }).length,  label: 'Pro Styling',    color: '#E4002B' },
     { num: upcoming.filter(function(e){ return e.classType==='Community'; }).length, label: 'Community',    color: '#4A7C59' },
-    { num: upcoming.filter(function(e){ return e.classType==='Care Coach'; }).length, label: 'Care Coach',   color: '#6D28D9' },
-    { num: upcoming.filter(function(e){ return e.classType==='Care Cadette'; }).length, label: 'Care Cadette', color: '#A855F7' }
+    { num: upcoming.filter(function(e){ return e.classType==='Care Coach'; }).length, label: 'Care Coach',   color: '#6D28D9' }
     
   ].forEach(function(s) {
     var p = el('div', 'stat-pill');
@@ -927,8 +925,7 @@ var YEARLY_TYPE_DEFS = [
   { key:'Education', label:'■ Education', activeColor:'#0044AA', lightBg:'#E8F0FF', borderColor:'#0044AA',  textColor:'#0044AA' },
   { key:'Pro Styling',  label:'■ Pro Styling',  activeColor:'#CC0022', lightBg:'#FFE8E8', borderColor:'#CC0022',  textColor:'#CC0022' },
   { key:'Community', label:'■ Community', activeColor:'#2D6A3F', lightBg:'#E8F5EC', borderColor:'#2D6A3F',  textColor:'#2D6A3F' },
-  { key:'Care Coach', label:'■ Care Coach', activeColor:'#6D28D9', lightBg:'#EDE9FE', borderColor:'#6D28D9', textColor:'#6D28D9' },
-  { key:'Care Cadette', label:'■ Care Cadette', activeColor:'#A855F7', lightBg:'#F5F0FF', borderColor:'#A855F7', textColor:'#7E22CE' }
+  { key:'Care Coach', label:'■ Care Coach', activeColor:'#6D28D9', lightBg:'#EDE9FE', borderColor:'#6D28D9', textColor:'#6D28D9' }
 ];
 
 function buildYearlyTypeFilter() {
