@@ -170,7 +170,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
 .pill-date{display:block;font-size:9px;font-weight:500;opacity:0.65;margin-top:3px;letter-spacing:0.2px;}
 
 /* ── YEARLY TYPE FILTER BAR ── */
-.yearly-type-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;align-items:center;}
+.yearly-type-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;}
 .type-filter-btn{padding:8px 22px;border-radius:30px;border:2px solid;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.4px;background:#FFF;}
 .type-filter-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.12);}
 
@@ -194,7 +194,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
 .brand-pill-btn.brand-off{background:#F0F0F0 !important;color:#CCC !important;border-color:#E0E0E0 !important;}
 
 /* ── LOCATION FILTER BAR ── */
-.location-filter-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;align-items:center;}
+.location-filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;}
 
 /* ── INACTIVE STATE — type and location filter pills ── */
 .filter-off{background:#F0F0F0 !important;color:#CCC !important;border-color:#E0E0E0 !important;}
@@ -934,7 +934,7 @@ var YEARLY_TYPE_DEFS = [
 function buildYearlyTypeFilter() {
   var bar = document.getElementById('yearly-type-filter');
   if (!bar) return;
-  bar.innerHTML = '';
+  bar.innerHTML = '<span class="bpf-label">Class Type</span>';
 
   YEARLY_TYPE_DEFS.forEach(function(t) {
     var btn = document.createElement('button');
@@ -1159,7 +1159,7 @@ function applyBrandRowVisibility() {
 function buildLocationFilter() {
   var bar = document.getElementById('location-filter');
   if (!bar) return;
-  bar.innerHTML = '';
+  bar.innerHTML = '<span class="bpf-label">Location</span>';
 
   LOCATION_DEFS.forEach(function(loc) {
     var btn = document.createElement('button');
