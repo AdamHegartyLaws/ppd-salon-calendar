@@ -196,6 +196,9 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
 /* ── LOCATION FILTER BAR ── */
 .location-filter-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;align-items:center;}
 
+/* ── INACTIVE STATE — type and location filter pills ── */
+.filter-off{background:#F0F0F0 !important;color:#CCC !important;border-color:#E0E0E0 !important;}
+
 </style>
 </head>
 <body>
@@ -287,8 +290,8 @@ var brandOrder   = [];   // preserves CSV row order for swimlane
 var allEvents    = [];   // all parsed event rows
 var activeFilter = 'All';
 var displayYear  = new Date().getFullYear();
-var activeSwimlaneType = 'All';
-var activeSwimlaneLocation = 'All';
+var activeTypes     = [];   // populated on init with all type keys
+var activeLocations = [];   // populated on init with all location keys
 var activeBrands = [];
 var showUpcomingOnly = false;
 var availableYears = [];
@@ -471,7 +474,9 @@ function initApp(metaRows, brandsRows, eventsRows, datesRows) {
     (meta.subtitle || '') + (meta.updated ? ' · Updated ' + meta.updated : '');
 
   /* — render both views — */
-  activeBrands = brandOrder.slice();   // all brands active by default
+  activeBrands    = brandOrder.slice();
+  activeTypes     = YEARLY_TYPE_DEFS.map(function(d) { return d.key; });
+  activeLocations = LOCATION_DEFS.map(function(d) { return d.key; });
   buildBrandPillFilter();
   buildLocationFilter();
   buildYearlyTypeFilter();
@@ -590,7 +595,7 @@ function changeYear(dir) {
   displayYear = availableYears[idx];
   buildSwimlane();
   applyBrandRowVisibility();            // re-hide any deselected brand rows
-  filterSwimlaneByType(activeSwimlaneType); // re-apply type + location + upcoming
+  applyPillVisibility(); 
 }
 
 /* ══════════════════════════════════════════
@@ -913,7 +918,6 @@ function formatPillDate(dateStr) {
    YEARLY TYPE FILTER
 ══════════════════════════════════════════ */
 var YEARLY_TYPE_DEFS = [
-  { key:'All',       label:'All Events', activeColor:'#1A1A1A', lightBg:'#F0F0F0', borderColor:'#CCC',     textColor:'#555'    },
   { key:'Launch',    label:'■ Launch',    activeColor:'#B8600A', lightBg:'#FFF0E0', borderColor:'#B8600A',  textColor:'#B8600A' },
   { key:'Education', label:'■ Education', activeColor:'#0044AA', lightBg:'#E8F0FF', borderColor:'#0044AA',  textColor:'#0044AA' },
   { key:'Campaign',  label:'■ Campaign',  activeColor:'#CC0022', lightBg:'#FFE8E8', borderColor:'#CC0022',  textColor:'#CC0022' },
@@ -930,8 +934,8 @@ function buildYearlyTypeFilter() {
     btn.className = 'type-filter-btn';
     btn.setAttribute('data-type', t.key);
     btn.textContent = t.label;
-    applyTypeButtonStyle(btn, t, t.key === activeSwimlaneType);
-    btn.addEventListener('click', function() { filterSwimlaneByType(t.key); });
+    setTypeButtonActive(btn, t, true); // all active on build
+    btn.addEventListener('click', function() { toggleTypeFilter(t.key); });
     bar.appendChild(btn);
   });
 }
@@ -946,18 +950,6 @@ function applyTypeButtonStyle(btn, def, isActive) {
     btn.style.color        = def.textColor;
     btn.style.borderColor  = def.borderColor;
   }
-}
-
-function filterSwimlaneByType(type) {
-  activeSwimlaneType = type;
-
-  /* update button appearance */
-  document.querySelectorAll('.type-filter-btn').forEach(function(btn) {
-    var def = YEARLY_TYPE_DEFS.find(function(d) { return d.key === btn.getAttribute('data-type'); });
-    if (def) applyTypeButtonStyle(btn, def, def.key === type);
-  });
-
-  applyPillVisibility();
 }
 
 /* ══════════════════════════════════════════
@@ -1059,12 +1051,15 @@ function isPastDate(dateStr) {
 ══════════════════════════════════════════ */
 function applyPillVisibility() {
   document.querySelectorAll('#swimlane-table .event-pill').forEach(function(pill) {
-    var typeOk     = activeSwimlaneType === 'All' ||
-                     pill.getAttribute('data-type') === activeSwimlaneType;
-    var locationOk = activeSwimlaneLocation === 'All' ||
-                     pill.getAttribute('data-location') === activeSwimlaneLocation;
+    var pillType = pill.getAttribute('data-type') || '';
+    var pillLoc  = pill.getAttribute('data-location') || '';
+
+    var typeOk     = activeTypes.indexOf(pillType) !== -1;
+    var locationOk = pillLoc === '' || pillLoc === 'Other' ||
+                     activeLocations.indexOf(pillLoc) !== -1;
     var upcomingOk = !showUpcomingOnly ||
                      !pill.classList.contains('past-event');
+
     pill.style.display = (typeOk && locationOk && upcomingOk) ? 'block' : 'none';
   });
 }
@@ -1086,7 +1081,6 @@ function toggleUpcomingOnly() {
    exactly as entered in events.csv
 ══════════════════════════════════════════ */
 var LOCATION_DEFS = [
-  { key:'All',      label:'All Locations', activeColor:'#1A1A1A', lightBg:'#F0F0F0', borderColor:'#CCC',    textColor:'#555'    },
   { key:'Online',   label:'🌐 Online',     activeColor:'#0057A8', lightBg:'#EAF2FF', borderColor:'#0057A8', textColor:'#0057A8' },
   { key:'Academy',  label:'⭐ Academy',    activeColor:'#C8A84B', lightBg:'#FDF8EC', borderColor:'#C8A84B', textColor:'#9A7A0A' },
   { key:'Tasmania', label:'📍 Tasmania',   activeColor:'#4A7C59', lightBg:'#F2F9F5', borderColor:'#4A7C59', textColor:'#4A7C59' }
@@ -1165,8 +1159,8 @@ function buildLocationFilter() {
     btn.className = 'type-filter-btn';
     btn.setAttribute('data-location', loc.key);
     btn.textContent = loc.label;
-    applyLocationButtonStyle(btn, loc, loc.key === activeSwimlaneLocation);
-    btn.addEventListener('click', function() { filterSwimlaneByLocation(loc.key); });
+    setLocationButtonActive(btn, loc, true); // all active on build
+    btn.addEventListener('click', function() { toggleLocationFilter(loc.key); });
     bar.appendChild(btn);
   });
 }
@@ -1183,17 +1177,65 @@ function applyLocationButtonStyle(btn, def, isActive) {
   }
 }
 
-function filterSwimlaneByLocation(locKey) {
-  activeSwimlaneLocation = locKey;
+/* ══════════════════════════════════════════
+   MULTI-SELECT TOGGLE — Type filter
+══════════════════════════════════════════ */
+function setTypeButtonActive(btn, def, isActive) {
+  if (isActive) {
+    btn.classList.remove('filter-off');
+    btn.style.background  = def.activeColor;
+    btn.style.color       = '#FFF';
+    btn.style.borderColor = def.activeColor;
+  } else {
+    btn.classList.add('filter-off');
+    btn.style.background  = '';
+    btn.style.color       = '';
+    btn.style.borderColor = '';
+  }
+}
 
-  /* update location button styles */
-  document.querySelectorAll('#location-filter .type-filter-btn').forEach(function(btn) {
-    var def = LOCATION_DEFS.find(function(d) {
-      return d.key === btn.getAttribute('data-location');
-    });
-    if (def) applyLocationButtonStyle(btn, def, def.key === locKey);
-  });
+function toggleTypeFilter(typeKey) {
+  var idx = activeTypes.indexOf(typeKey);
+  if (idx === -1) {
+    activeTypes.push(typeKey);
+  } else {
+    activeTypes.splice(idx, 1);
+  }
+  var isNowActive = activeTypes.indexOf(typeKey) !== -1;
+  var def = YEARLY_TYPE_DEFS.find(function(d) { return d.key === typeKey; });
+  var btn = document.querySelector('.type-filter-btn[data-type="' + typeKey + '"]');
+  if (btn && def) setTypeButtonActive(btn, def, isNowActive);
+  applyPillVisibility();
+}
 
+/* ══════════════════════════════════════════
+   MULTI-SELECT TOGGLE — Location filter
+══════════════════════════════════════════ */
+function setLocationButtonActive(btn, def, isActive) {
+  if (isActive) {
+    btn.classList.remove('filter-off');
+    btn.style.background  = def.activeColor;
+    btn.style.color       = '#FFF';
+    btn.style.borderColor = def.activeColor;
+  } else {
+    btn.classList.add('filter-off');
+    btn.style.background  = '';
+    btn.style.color       = '';
+    btn.style.borderColor = '';
+  }
+}
+
+function toggleLocationFilter(locKey) {
+  var idx = activeLocations.indexOf(locKey);
+  if (idx === -1) {
+    activeLocations.push(locKey);
+  } else {
+    activeLocations.splice(idx, 1);
+  }
+  var isNowActive = activeLocations.indexOf(locKey) !== -1;
+  var def = LOCATION_DEFS.find(function(d) { return d.key === locKey; });
+  var btn = document.querySelector('#location-filter .type-filter-btn[data-location="' + locKey + '"]');
+  if (btn && def) setLocationButtonActive(btn, def, isNowActive);
   applyPillVisibility();
 }
 
