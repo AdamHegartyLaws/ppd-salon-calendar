@@ -554,7 +554,7 @@ function buildSwimlane() {
           pill.style.borderLeftColor = brand.brandColor;
           pill.style.cursor = 'pointer';
           pill.setAttribute('data-type', ev.classType);
-          pill.setAttribute('data-location', ev.classLocationCategory || 'Other');
+          pill.setAttribute('data-location', ev.classLocation || 'Other');
           if (isPastDate(ev.classDate)) pill.classList.add('past-event');
           pill.addEventListener('click', (function(evData){ return function(){ showPDP(evData); }; })(ev));
 
@@ -1082,7 +1082,7 @@ function toggleUpcomingOnly() {
 
 /* ══════════════════════════════════════════
    LOCATION FILTER DEFINITIONS
-   Keys must match classLocationCategory values
+   Keys must match classLocation values
    exactly as entered in events.csv
 ══════════════════════════════════════════ */
 var LOCATION_DEFS = [
