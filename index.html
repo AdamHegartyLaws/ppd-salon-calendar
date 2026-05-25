@@ -577,6 +577,12 @@ body{
 /* ── BRAND PILL FILTER BAR ── */
 .brand-pill-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;}
 
+.brand-pill-btn {
+  padding: 6px 10px; /* was 6px 14px — less horizontal padding without text */
+  min-width: 44px;   /* ensures a comfortable tap target */
+  justify-content: center;
+}
+
 /* 500 Medium — small label preceding filter pills */
 .bpf-label{
   font-size:10px;
@@ -1158,8 +1164,7 @@ function buildSwimlane() {
 
     var tdLabel = el('td', 'brand-label');
     tdLabel.innerHTML =
-      '<span class="b-icon">' + brandLogoHTML(brand, 22) + '</span>' +
-      '<span class="b-name" style="color:' + brand.brandColor + '">' + brand.brandName + '</span>';
+      '<span class="b-icon">' + brandLogoHTML(brand, 28) + '</span>'
     tr.appendChild(tdLabel);
 
     MONTHS.forEach(function(m, mi) {
@@ -1319,8 +1324,7 @@ function buildCard(ev) {
     '<div class="card-strip" style="background:' + color + '"></div>' +
     '<div class="card-body">' +
       '<div class="card-brand-row">' +
-        '<span class="card-brand-icon">' + brandLogoHTML(brand, 22) + '</span>' +
-        '<span class="card-brand-name">' + (brand.brandName || ev.brandKey) + '</span>' +
+        '<span class="card-brand-icon">' + brandLogoHTML(brand, 28) + '</span>' +
         '<span class="card-type-badge" style="background:' + badge.bg + ';color:' + badge.color + '">' +
           ev.classType +
         '</span>' +
@@ -1400,8 +1404,7 @@ function showPDP(ev) {
     '<div class="pdp-strip" style="background:' + color + '"></div>' +
     '<div class="pdp-body">' +
       '<div class="pdp-brand-row">' +
-        '<span class="pdp-brand-icon">' + brandLogoHTML(brand, 28) + '</span>' +
-        '<span class="pdp-brand-name">' + (brand.brandName || ev.brandKey) + '</span>' +
+        '<span class="pdp-brand-icon">' + brandLogoHTML(brand, 35) + '</span>' +
         '<span class="pdp-type-badge" style="background:' + badge.bg + ';color:' + badge.color + '">' +
           ev.classType +
         '</span>' +
@@ -1468,7 +1471,7 @@ function buildYearlyTypeFilter(containerId) {
     btn.className = 'type-filter-btn';
     btn.setAttribute('data-type', t.key);
     btn.textContent = t.label;
-    setTypeButtonActive(btn, t, true);
+    setFilterButtonActive(btn, true);
     btn.addEventListener('click', function() { toggleTypeFilter(t.key); });
     bar.appendChild(btn);
   });
@@ -1605,7 +1608,7 @@ function buildBrandPillFilter(containerId) {
     var btn = document.createElement('button');
     btn.className = 'brand-pill-btn';
     btn.setAttribute('data-brandkey', key);
-    btn.innerHTML = brandLogoHTML(b, 16) + ' ' + b.brandName;
+    btn.innerHTML = brandLogoHTML(b, 20);
     btn.style.background  = b.brandColor;
     btn.style.color       = b.textColor;
     btn.style.borderColor = b.brandColor;
@@ -1663,27 +1666,10 @@ function buildLocationFilter(containerId) {
     btn.className = 'type-filter-btn';
     btn.setAttribute('data-location', loc.key);
     btn.textContent = loc.label;
-    setLocationButtonActive(btn, loc, true);
+    setFilterButtonActive(btn, true);
     btn.addEventListener('click', function() { toggleLocationFilter(loc.key); });
     bar.appendChild(btn);
   });
-}
-
-/* ══════════════════════════════════════════
-   TYPE FILTER TOGGLE
-══════════════════════════════════════════ */
-function setTypeButtonActive(btn, def, isActive) {
-  if (isActive) {
-    btn.classList.remove('filter-off');
-    btn.style.background  = def.activeColor;
-    btn.style.color       = '#FFF';
-    btn.style.borderColor = def.activeColor;
-  } else {
-    btn.classList.add('filter-off');
-    btn.style.background  = '';
-    btn.style.color       = '';
-    btn.style.borderColor = '';
-  }
 }
 
 function toggleTypeFilter(typeKey) {
@@ -1697,7 +1683,7 @@ function toggleTypeFilter(typeKey) {
   var def = YEARLY_TYPE_DEFS.find(function(d) { return d.key === typeKey; });
 
   document.querySelectorAll('.type-filter-btn[data-type="' + typeKey + '"]').forEach(function(btn) {
-    if (def) setTypeButtonActive(btn, def, isNowActive);
+    if (def) setFilterButtonActive(btn, isNowActive);
   });
 
   applyPillVisibility();
@@ -1705,14 +1691,14 @@ function toggleTypeFilter(typeKey) {
 }
 
 /* ══════════════════════════════════════════
-   LOCATION FILTER TOGGLE
+  FILTER TOGGLE
 ══════════════════════════════════════════ */
-function setLocationButtonActive(btn, def, isActive) {
+function setFilterButtonActive(btn, isActive) {
   if (isActive) {
     btn.classList.remove('filter-off');
-    btn.style.background  = def.activeColor;
-    btn.style.color       = '#FFF';
-    btn.style.borderColor = def.activeColor;
+    btn.style.background  = '#1A1A1A';
+    btn.style.color       = '#C8A84B';
+    btn.style.borderColor = '#1A1A1A';
   } else {
     btn.classList.add('filter-off');
     btn.style.background  = '';
@@ -1732,7 +1718,7 @@ function toggleLocationFilter(locKey) {
   var def = LOCATION_DEFS.find(function(d) { return d.key === locKey; });
 
   document.querySelectorAll('.type-filter-btn[data-location="' + locKey + '"]').forEach(function(btn) {
-    if (def) setLocationButtonActive(btn, def, isNowActive);
+    if (def) setFilterButtonActive(btn, isNowActive);
   });
 
   applyPillVisibility();
