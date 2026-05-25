@@ -532,7 +532,7 @@ body{
   cursor:pointer;
   transition:all 0.2s;
   letter-spacing:0.4px;
-  background: '#1A1A1A';
+  background: 'transparent';
 }
 .type-filter-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.12);}
 
@@ -1660,7 +1660,7 @@ function toggleTypeFilter(typeKey) {
 function setFilterButtonActive(btn, isActive) {
   if (isActive) {
     btn.classList.remove('filter-off');
-    btn.style.background  = '#1A1A1A';
+    btn.style.background  = 'transparent';
     btn.style.color       = '#C8A84B';
     btn.style.borderColor = '#1A1A1A';
   } else {
