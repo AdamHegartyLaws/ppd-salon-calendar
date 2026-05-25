@@ -1,9 +1,9 @@
-brandKey	brandName	brandIcon	brandLogo	brandColor	textColor	isProConnect
-lp	L'Oréal Pro	?	loreal.png	#1A1A1A	#1A1A1A	FALSE
-kerastase	Kérastase	?	kerastase.png	#CF93B1	#CF93B1	FALSE
-proconnect	Pro.Connect	??	proconnect.png	#C9A84C	#C9A84C	TRUE
-pureology	Pureology	??	pureology.png	#5C3D6E	#5C3D6E	FALSE
-redken	Redken	??	redken.png	#E4002B	#E4002B	FALSE
-matrix	Matrix	??	matrix.png	#F26522	#F26522	FALSE
-biolage	Biolage	??	biolage.png	#4A7C59	#4A7C59	FALSE
-essentials	Business Essentials	??	lba.png	#0057A8	#0057A8	FALSE
+brandKey,brandName,brandIcon,brandLogo,brandColor,textColor,isProConnect
+lp,L'Oréal Pro,?,loreal.png,#1A1A1A,#1A1A1A,FALSE
+kerastase,Kérastase,?,kerastase.png,#CF93B1,#CF93B1,FALSE
+proconnect,Pro.Connect,??,proconnect.png,#C9A84C,#C9A84C,TRUE
+pureology,Pureology,??,pureology.png,#5C3D6E,#5C3D6E,FALSE
+redken,Redken,??,redken.png,#E4002B,#E4002B,FALSE
+matrix,Matrix,??,matrix.png,#F26522,#F26522,FALSE
+biolage,Biolage,??,biolage.png,#4A7C59,#4A7C59,FALSE
+essentials,Business Essentials,??,lba.png,#0057A8,#0057A8,FALSE
