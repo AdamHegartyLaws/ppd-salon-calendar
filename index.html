@@ -1367,16 +1367,16 @@ function renderSearchResults(query) {
     return;
   }
 
-/* ── Filter events that contains query ── */
-var matched = allEvents.filter(function(ev) {
-    var haystack = [
-      ev.classTitle,
-      ev.classArtists,
-      ev.classShortDescription,
-      ev.classLongDescription
-    ].join(' ').toLowerCase();
-    return haystack.indexOf(q) !== -1;
-  });
+  /* ── Filter events that contains query ── */
+  var matched = allEvents.filter(function(ev) {
+      var haystack = [
+        ev.classTitle,
+        ev.classArtists,
+        ev.classShortDescription,
+        ev.classLongDescription
+      ].join(' ').toLowerCase();
+      return haystack.indexOf(query) !== -1;
+    });
 
   /* ── No results ── */
   if (matched.length === 0) {
