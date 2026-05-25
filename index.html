@@ -742,7 +742,6 @@ body{
   width: auto;
   margin: 0 auto 20px;
   opacity: 0.40;
-  filter: grayscale(1);
 }
 
 /* ══════════════════════════════════════════
@@ -757,7 +756,6 @@ body{
   width: auto;
   vertical-align: middle;
   opacity: 0.35;
-  filter: grayscale(1);
   margin-right: 8px;
 }
 
@@ -884,6 +882,30 @@ var TYPE_BADGE = {
   'Community': { bg:'#E8F5EC', color:'#2D6A3F' },
   'Care Coach': { bg:'#EDE9FE', color:'#6D28D9' }
 };
+
+/* ══════════════════════════════════════════
+   BRAND LOGO RENDERER
+   Uses brandLogo (full file path from CSV).
+   Falls back to brandIcon emoji if no logo
+   path is present on the brand object.
+══════════════════════════════════════════ */
+function brandLogoHTML(brand, size) {
+  if (!brand) return '';
+  size = size || 20;
+
+  // Use brandLogo path if available
+  if (brand.brandLogo && String(brand.brandLogo).trim() !== '') {
+    return '<img src="' + brand.brandLogo + '" ' +
+           'alt="' + (brand.brandName || '') + '" ' +
+           'style="width:auto;height:' + size + 'px;' +
+           'max-width:' + (size * 3) + 'px;' +
+           'object-fit:contain;vertical-align:middle;display:inline-block;" ' +
+           'onerror="this.style.display=\'none\'">';
+  }
+
+  // Fallback — emoji brandIcon
+  return brand.brandIcon || '';
+}
 
 /* ══════════════════════════════════════════
    2. STATE
@@ -1120,7 +1142,7 @@ function buildSwimlane() {
 
     var tdLabel = el('td', 'brand-label');
     tdLabel.innerHTML =
-      '<span class="b-icon">' + brand.brandIcon + '</span>' +
+      '<span class="b-icon">' + brandLogoHTML(brand, 22) + '</span>' +
       '<span class="b-name" style="color:' + brand.brandColor + '">' + brand.brandName + '</span>';
     tr.appendChild(tdLabel);
 
@@ -1281,7 +1303,7 @@ function buildCard(ev) {
     '<div class="card-strip" style="background:' + color + '"></div>' +
     '<div class="card-body">' +
       '<div class="card-brand-row">' +
-        '<span class="card-brand-icon">' + (brand.brandIcon || '') + '</span>' +
+        '<span class="card-brand-icon">' + brandLogoHTML(brand, 22) + '</span>' +
         '<span class="card-brand-name">' + (brand.brandName || ev.brandKey) + '</span>' +
         '<span class="card-type-badge" style="background:' + badge.bg + ';color:' + badge.color + '">' +
           ev.classType +
@@ -1362,7 +1384,7 @@ function showPDP(ev) {
     '<div class="pdp-strip" style="background:' + color + '"></div>' +
     '<div class="pdp-body">' +
       '<div class="pdp-brand-row">' +
-        '<span class="pdp-brand-icon">' + (brand.brandIcon || '') + '</span>' +
+        '<span class="pdp-brand-icon">' + brandLogoHTML(brand, 28) + '</span>' +
         '<span class="pdp-brand-name">' + (brand.brandName || ev.brandKey) + '</span>' +
         '<span class="pdp-type-badge" style="background:' + badge.bg + ';color:' + badge.color + '">' +
           ev.classType +
@@ -1413,11 +1435,11 @@ function formatPillDate(dateStr) {
    YEARLY TYPE FILTER
 ══════════════════════════════════════════ */
 var YEARLY_TYPE_DEFS = [
-  { key:'Launch',    label:'■ Launch',    activeColor:'#B8600A', lightBg:'#FFF0E0', borderColor:'#B8600A',  textColor:'#B8600A' },
-  { key:'Education', label:'■ Education', activeColor:'#0044AA', lightBg:'#E8F0FF', borderColor:'#0044AA',  textColor:'#0044AA' },
-  { key:'Pro Styling',  label:'■ Pro Styling',  activeColor:'#CC0022', lightBg:'#FFE8E8', borderColor:'#CC0022',  textColor:'#CC0022' },
-  { key:'Community', label:'■ Community', activeColor:'#2D6A3F', lightBg:'#E8F5EC', borderColor:'#2D6A3F',  textColor:'#2D6A3F' },
-  { key:'Care Coach', label:'■ Care Coach', activeColor:'#6D28D9', lightBg:'#EDE9FE', borderColor:'#6D28D9', textColor:'#6D28D9' }
+  { key:'Launch',    label:'Launch',    activeColor:'#B8600A', lightBg:'#FFF0E0', borderColor:'#B8600A',  textColor:'#B8600A' },
+  { key:'Education', label:'Education', activeColor:'#0044AA', lightBg:'#E8F0FF', borderColor:'#0044AA',  textColor:'#0044AA' },
+  { key:'Pro Styling',  label:'Pro Styling',  activeColor:'#CC0022', lightBg:'#FFE8E8', borderColor:'#CC0022',  textColor:'#CC0022' },
+  { key:'Community', label:'Community', activeColor:'#2D6A3F', lightBg:'#E8F5EC', borderColor:'#2D6A3F',  textColor:'#2D6A3F' },
+  { key:'Care Coach', label:'Care Coach', activeColor:'#6D28D9', lightBg:'#EDE9FE', borderColor:'#6D28D9', textColor:'#6D28D9' }
 ];
 
 function buildYearlyTypeFilter(containerId) {
@@ -1567,7 +1589,7 @@ function buildBrandPillFilter(containerId) {
     var btn = document.createElement('button');
     btn.className = 'brand-pill-btn';
     btn.setAttribute('data-brandkey', key);
-    btn.innerHTML = b.brandIcon + ' ' + b.brandName;
+    btn.innerHTML = brandLogoHTML(b, 16) + ' ' + b.brandName;
     btn.style.background  = b.brandColor;
     btn.style.color       = b.textColor;
     btn.style.borderColor = b.brandColor;
