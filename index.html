@@ -532,7 +532,7 @@ body{
   cursor:pointer;
   transition:all 0.2s;
   letter-spacing:0.4px;
-  background:#FFF;
+  background: transparent;
 }
 .type-filter-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.12);}
 
@@ -577,12 +577,6 @@ body{
 /* ── BRAND PILL FILTER BAR ── */
 .brand-pill-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;}
 
-.brand-pill-btn {
-  padding: 6px 10px; /* was 6px 14px — less horizontal padding without text */
-  min-width: 44px;   /* ensures a comfortable tap target */
-  justify-content: center;
-}
-
 /* 500 Medium — small label preceding filter pills */
 .bpf-label{
   font-size:10px;
@@ -609,6 +603,7 @@ body{
   cursor:pointer;
   transition:all 0.2s;
   white-space:nowrap;
+  background: transparent;
 }
 .brand-pill-btn:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,0.12);}
 .brand-pill-btn.brand-off{background:#F0F0F0 !important;color:#CCC !important;border-color:#E0E0E0 !important;}
@@ -1164,7 +1159,7 @@ function buildSwimlane() {
 
     var tdLabel = el('td', 'brand-label');
     tdLabel.innerHTML =
-      '<span class="b-icon">' + brandLogoHTML(brand, 28) + '</span>'
+      '<span class="b-icon">' + brandLogoHTML(brand, 40) + '</span>'
     tr.appendChild(tdLabel);
 
     MONTHS.forEach(function(m, mi) {
@@ -1324,7 +1319,7 @@ function buildCard(ev) {
     '<div class="card-strip" style="background:' + color + '"></div>' +
     '<div class="card-body">' +
       '<div class="card-brand-row">' +
-        '<span class="card-brand-icon">' + brandLogoHTML(brand, 28) + '</span>' +
+        '<span class="card-brand-icon">' + brandLogoHTML(brand, 36) + '</span>' +
         '<span class="card-type-badge" style="background:' + badge.bg + ';color:' + badge.color + '">' +
           ev.classType +
         '</span>' +
@@ -1404,7 +1399,7 @@ function showPDP(ev) {
     '<div class="pdp-strip" style="background:' + color + '"></div>' +
     '<div class="pdp-body">' +
       '<div class="pdp-brand-row">' +
-        '<span class="pdp-brand-icon">' + brandLogoHTML(brand, 35) + '</span>' +
+        '<span class="pdp-brand-icon">' + brandLogoHTML(brand, 36) + '</span>' +
         '<span class="pdp-type-badge" style="background:' + badge.bg + ';color:' + badge.color + '">' +
           ev.classType +
         '</span>' +
@@ -1608,8 +1603,8 @@ function buildBrandPillFilter(containerId) {
     var btn = document.createElement('button');
     btn.className = 'brand-pill-btn';
     btn.setAttribute('data-brandkey', key);
-    btn.innerHTML = brandLogoHTML(b, 20);
-    btn.style.background  = b.brandColor;
+    btn.innerHTML = b.brandName;
+    btn.style.background  = 'transparent';
     btn.style.color       = b.textColor;
     btn.style.borderColor = b.brandColor;
     btn.addEventListener('click', function() { toggleBrandPill(key); });
@@ -1633,7 +1628,7 @@ function toggleBrandPill(brandKey) {
     var b = brandLookup[brandKey];
     if (isNowActive) {
       btn.classList.remove('brand-off');
-      btn.style.background  = b.brandColor;
+      btn.style.background  = 'transparent';
       btn.style.color       = b.textColor;
       btn.style.borderColor = b.brandColor;
     } else {
@@ -1696,7 +1691,7 @@ function toggleTypeFilter(typeKey) {
 function setFilterButtonActive(btn, isActive) {
   if (isActive) {
     btn.classList.remove('filter-off');
-    btn.style.background  = '#1A1A1A';
+    btn.style.background  = 'transparent';
     btn.style.color       = '#C8A84B';
     btn.style.borderColor = '#1A1A1A';
   } else {
