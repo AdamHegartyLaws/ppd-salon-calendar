@@ -370,7 +370,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
   <div class="search-hero">
     <div class="section-label">Education Library</div>
     <h2 class="section-title">Search <span>Brands</span></h2>
-    <p class="search-subtitle">Discover what each brand stands for — type anything to explore</p>
+    <p class="search-subtitle">Discover education opportunities across all brands</p>
     <div class="search-input-wrap">
       <span class="search-icon">🔍</span>
       <input
@@ -1333,9 +1333,6 @@ function toggleLocationFilter(locKey) {
 
 /* ══════════════════════════════════════════
    SEARCH VIEW
-   Searches classLongDescription in brands.csv
-   ⚠ Column name: classLongDescription
-     Adjust below if your CSV uses a different header
 ══════════════════════════════════════════ */
 
 var SEARCH_FIELD = 'classLongDescription'; // 
@@ -1369,23 +1366,21 @@ function renderSearchResults(query) {
     results.innerHTML  =
       '<div class="search-prompt">' +
         '<span class="prompt-icon">✨</span>' +
-        'Start typing to explore L\'Oréal Professionnel brands' +
+        'Start typing to explore class opportunities' +
       '</div>';
     return;
   }
 
-  /* ── Filter brands whose description contains query ── */
+/* ── Filter events whose classLongDescription contains query ── */
   var q       = query.toLowerCase();
-  var matched = brandOrder.filter(function(key) {
-    var b    = brandLookup[key];
-    if (!b)  return false;
-    var desc = String(b[SEARCH_FIELD] || '').toLowerCase();
+  var matched = allEvents.filter(function(ev) {
+    var desc = String(ev[SEARCH_FIELD] || '').toLowerCase();
     return desc.indexOf(q) !== -1;
   });
 
   /* ── No results ── */
   if (matched.length === 0) {
-    metaEl.textContent = '0 brands matched';
+    metaEl.textContent = '0 events matched';
     results.innerHTML  =
       '<div class="search-no-results">' +
         '<strong>No results found</strong>' +
@@ -1395,14 +1390,12 @@ function renderSearchResults(query) {
   }
 
   /* ── Show count ── */
-  metaEl.textContent = matched.length + ' brand' + (matched.length !== 1 ? 's' : '') + ' matched';
+  metaEl.textContent = matched.length + ' event' + (matched.length !== 1 ? 's' : '') + ' matched';
 
-  /* ── Render cards ── */
+  /* ── Render cards (reuses existing buildCard) ── */
   results.innerHTML = '';
-  matched.forEach(function(key) {
-    var b    = brandLookup[key];
-    var desc = String(b[SEARCH_FIELD] || 'No description available.');
-    results.appendChild(buildBrandResultCard(b, desc, query));
+  matched.forEach(function(ev) {
+    results.appendChild(buildCard(ev));
   });
 }
 
