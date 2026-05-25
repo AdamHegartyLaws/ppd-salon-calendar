@@ -187,6 +187,131 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
 /* ── INACTIVE STATE — type and location filter pills ── */
 .filter-off{background:#F0F0F0 !important;color:#CCC !important;border-color:#E0E0E0 !important;}
 
+/* ══════════════════════════════════════════
+   SEARCH VIEW
+══════════════════════════════════════════ */
+
+/* ── Hero / Input Area ── */
+.search-hero{text-align:center;padding:0 0 32px;}
+.search-subtitle{font-size:13px;color:#888;margin-top:-16px;margin-bottom:28px;}
+
+.search-input-wrap{
+  position:relative;
+  max-width:640px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+}
+.search-icon{
+  position:absolute;
+  left:18px;
+  font-size:16px;
+  pointer-events:none;
+  z-index:1;
+}
+.search-input{
+  width:100%;
+  padding:16px 48px 16px 48px;
+  border-radius:50px;
+  border:2px solid #E0E0E0;
+  font-size:15px;
+  font-family:'Segoe UI',Arial,sans-serif;
+  color:#1A1A1A;
+  background:#FFF;
+  box-shadow:0 4px 24px rgba(0,0,0,0.08);
+  outline:none;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.search-input:focus{
+  border-color:#C8A84B;
+  box-shadow:0 4px 28px rgba(200,168,75,0.18);
+}
+.search-input::placeholder{color:#BBB;}
+.search-clear{
+  position:absolute;
+  right:14px;
+  background:none;
+  border:none;
+  font-size:14px;
+  color:#BBB;
+  cursor:pointer;
+  padding:6px;
+  border-radius:50%;
+  display:none;
+  transition:color 0.15s;
+  line-height:1;
+}
+.search-clear:hover{color:#555;}
+.search-clear.visible{display:block;}
+
+.search-meta{
+  font-size:11px;
+  color:#AAA;
+  margin-top:12px;
+  min-height:16px;
+  letter-spacing:0.5px;
+}
+
+/* ── Results Grid ── */
+.search-results{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:20px;
+  max-width:1200px;
+  margin:0 auto;
+}
+
+/* ── Empty / Prompt States ── */
+.search-prompt{
+  grid-column:1/-1;
+  text-align:center;
+  padding:60px 20px;
+  color:#CCC;
+  font-size:15px;
+}
+.search-prompt .prompt-icon{font-size:48px;display:block;margin-bottom:16px;opacity:0.5;}
+.search-no-results{
+  grid-column:1/-1;
+  text-align:center;
+  padding:60px 20px;
+  color:#AAA;
+  font-size:14px;
+}
+.search-no-results strong{display:block;font-size:18px;color:#CCC;margin-bottom:8px;}
+
+/* ── Brand Result Card ── */
+.brand-result-card{
+  background:#FFF;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,0.08);
+  transition:transform 0.2s,box-shadow 0.2s;
+  display:flex;
+  flex-direction:column;
+}
+.brand-result-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 32px rgba(0,0,0,0.13);
+}
+.brc-strip{height:6px;}
+.brc-body{padding:20px 22px 22px;flex:1;display:flex;flex-direction:column;}
+.brc-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.brc-icon{font-size:22px;}
+.brc-name{font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;}
+.brc-desc{
+  font-size:13px;
+  color:#555;
+  line-height:1.7;
+  flex:1;
+}
+
+/* ── Highlight matched text ── */
+.search-highlight{
+  border-radius:3px;
+  padding:1px 2px;
+  font-weight:700;
+}
+
 </style>
 </head>
 <body>
@@ -201,7 +326,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
 <!-- ████ TABS ████ -->
 <div class="tab-bar">
   <button class="tab-btn active" id="tab-yearly" onclick="switchView('yearly')">📅 Yearly Snapshot</button>
-  <button class="tab-btn"        id="tab-weeks"  onclick="switchView('weeks')">🔍 Next 8 Weeks</button>
+  <button class="tab-btn"        id="tab-weeks"  onclick="switchView('weeks')">🗓 Next 8 Weeks</button>
+  <button class="tab-btn"        id="tab-search" onclick="switchView('search')">🔍 Search</button>
 </div>
 
 <!-- ████ VIEW 1 — YEARLY ████ -->
@@ -237,6 +363,29 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
     <div id="weeks-container"></div>
     <p class="footer-note">All events indicative · Dates subject to change · by L'Oréal Professionnel</p>
   </div>
+</div>
+
+<!-- ████ VIEW 3 — SEARCH ████ -->
+<div id="view-search" class="view">
+  <div class="search-hero">
+    <div class="section-label">Education Library</div>
+    <h2 class="section-title">Search <span>Brands</span></h2>
+    <p class="search-subtitle">Discover what each brand stands for — type anything to explore</p>
+    <div class="search-input-wrap">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        id="search-input"
+        class="search-input"
+        placeholder="e.g. bond, botanical, vegan, colour protect..."
+        autocomplete="off"
+        oninput="handleSearch(this.value)"
+      />
+      <button class="search-clear" id="search-clear" onclick="clearSearch()" title="Clear">✕</button>
+    </div>
+    <div class="search-meta" id="search-meta"></div>
+  </div>
+  <div id="search-results" class="search-results"></div>
 </div>
 
 <!-- ████ EVENT DETAIL MODAL ████ -->
@@ -282,6 +431,7 @@ var activeTypes     = [];   // populated on init with all type keys
 var activeLocations = [];   // populated on init with all location keys
 var activeBrands = [];
 var showUpcomingOnly = false;
+var lastSearchQuery = '';
 var availableYears = [];
 var today          = getTodayStr();
 var currentMonth   = new Date().getMonth();   // 0–11, auto from device
@@ -731,6 +881,13 @@ function switchView(v) {
   document.querySelectorAll('.tab-btn').forEach(function(e){ e.classList.remove('active'); });
   document.getElementById('view-' + v).classList.add('active');
   document.getElementById('tab-' + v).classList.add('active');
+
+  /* initialise search prompt when switching to search tab */
+  if (v === 'search') {
+    renderSearchResults(lastSearchQuery);
+    var input = document.getElementById('search-input');
+    if (input) setTimeout(function(){ input.focus(); }, 80);
+  }
 }
 
 function el(tag, cls) {
@@ -1172,6 +1329,119 @@ function toggleLocationFilter(locKey) {
 
   applyPillVisibility();
   renderWeeks();
+}
+
+/* ══════════════════════════════════════════
+   SEARCH VIEW
+   Searches classLongDescription in brands.csv
+   ⚠ Column name: classLongDescription
+     Adjust below if your CSV uses a different header
+══════════════════════════════════════════ */
+
+var SEARCH_FIELD = 'classLongDescription'; // 
+
+function handleSearch(query) {
+  lastSearchQuery = query.trim();
+
+  /* show/hide clear button */
+  var clearBtn = document.getElementById('search-clear');
+  if (clearBtn) clearBtn.classList.toggle('visible', lastSearchQuery.length > 0);
+
+  renderSearchResults(lastSearchQuery);
+}
+
+function clearSearch() {
+  var input = document.getElementById('search-input');
+  if (input) { input.value = ''; input.focus(); }
+  lastSearchQuery = '';
+  document.getElementById('search-clear').classList.remove('visible');
+  renderSearchResults('');
+}
+
+function renderSearchResults(query) {
+  var results  = document.getElementById('search-results');
+  var metaEl   = document.getElementById('search-meta');
+  if (!results) return;
+
+  /* ── Empty query → show prompt ── */
+  if (!query) {
+    metaEl.textContent = '';
+    results.innerHTML  =
+      '<div class="search-prompt">' +
+        '<span class="prompt-icon">✨</span>' +
+        'Start typing to explore L\'Oréal Professionnel brands' +
+      '</div>';
+    return;
+  }
+
+  /* ── Filter brands whose description contains query ── */
+  var q       = query.toLowerCase();
+  var matched = brandOrder.filter(function(key) {
+    var b    = brandLookup[key];
+    if (!b)  return false;
+    var desc = String(b[SEARCH_FIELD] || '').toLowerCase();
+    return desc.indexOf(q) !== -1;
+  });
+
+  /* ── No results ── */
+  if (matched.length === 0) {
+    metaEl.textContent = '0 brands matched';
+    results.innerHTML  =
+      '<div class="search-no-results">' +
+        '<strong>No results found</strong>' +
+        'Try a different keyword — e.g. "colour", "repair", "vegan"' +
+      '</div>';
+    return;
+  }
+
+  /* ── Show count ── */
+  metaEl.textContent = matched.length + ' brand' + (matched.length !== 1 ? 's' : '') + ' matched';
+
+  /* ── Render cards ── */
+  results.innerHTML = '';
+  matched.forEach(function(key) {
+    var b    = brandLookup[key];
+    var desc = String(b[SEARCH_FIELD] || 'No description available.');
+    results.appendChild(buildBrandResultCard(b, desc, query));
+  });
+}
+
+function buildBrandResultCard(brand, desc, query) {
+  var color   = brand.brandColor  || '#1A1A1A';
+  var textCol = brand.textColor   || '#FFFFFF';
+
+  var card = el('div', 'brand-result-card');
+
+  card.innerHTML =
+    '<div class="brc-strip" style="background:' + color + '"></div>' +
+    '<div class="brc-body">' +
+      '<div class="brc-header">' +
+        '<span class="brc-icon">' + (brand.brandIcon || '') + '</span>' +
+        '<span class="brc-name" style="color:' + color + '">' + brand.brandName + '</span>' +
+      '</div>' +
+      '<div class="brc-desc">' + highlightText(desc, query, color) + '</div>' +
+    '</div>';
+
+  return card;
+}
+
+function highlightText(text, query, brandColor) {
+  /* Wraps every case-insensitive match with a coloured <mark> */
+  if (!query) return escapeHtml(text);
+  var escaped = escapeHtml(text);
+  var escapedQ = escapeHtml(query).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  var regex = new RegExp('(' + escapedQ + ')', 'gi');
+  return escaped.replace(regex,
+    '<mark class="search-highlight" style="background:' + brandColor + '22;color:' + brandColor + '">$1</mark>'
+  );
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
 }
 
 </script>
