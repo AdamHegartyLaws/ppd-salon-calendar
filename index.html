@@ -873,6 +873,8 @@ var CSV = {
   dates:  './data/dates.csv'
 };
 
+var BRAND_LOGO_PATH = 'assets/images/brandicon/';
+
 var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 var TYPE_BADGE = {
@@ -885,9 +887,10 @@ var TYPE_BADGE = {
 
 /* ══════════════════════════════════════════
    BRAND LOGO RENDERER
-   Uses brandLogo (full file path from CSV).
-   Normalises Windows backslashes → forward
-   slashes so browser fetch always resolves.
+   brandLogo in CSV stores filename only
+   e.g. "biolage.png" — BRAND_LOGO_PATH
+   is prepended automatically.
+   Backslashes normalised for Windows paths.
    onerror swaps broken img to emoji fallback.
 ══════════════════════════════════════════ */
 function brandLogoHTML(brand, size) {
@@ -897,11 +900,17 @@ function brandLogoHTML(brand, size) {
   var fallback = brand.brandIcon || '';
   var logo     = brand.brandLogo ? String(brand.brandLogo).trim() : '';
 
-  // Normalise Windows backslashes to forward slashes
+  // Normalise any Windows backslashes
   logo = logo.replace(/\\/g, '/');
 
   if (logo !== '') {
-    return '<img src="' + logo + '" ' +
+
+    // If it's a filename only (no folder path), prepend the base path
+    var src = (logo.indexOf('/') === -1)
+      ? BRAND_LOGO_PATH + logo
+      : logo;
+
+    return '<img src="' + src + '" ' +
            'alt="' + (brand.brandName || '') + '" ' +
            'data-fallback="' + fallback + '" ' +
            'style="width:auto;height:' + size + 'px;' +
@@ -910,7 +919,7 @@ function brandLogoHTML(brand, size) {
            'onerror="this.outerHTML=this.getAttribute(\'data-fallback\')">';
   }
 
-  // No logo path at all — show emoji directly
+  // No logo value at all — show emoji directly
   return fallback;
 }
 
