@@ -687,9 +687,6 @@ body{
    HEADER LOGO — logo-access.webp
    Constrained by height to preserve aspect
    ratio regardless of container width.
-   filter:invert renders the logo white on
-   the dark header — remove if your logo
-   already has a light/transparent treatment.
 ══════════════════════════════════════════ */
 .header-logo {
   display: block;
@@ -776,8 +773,6 @@ body{
   alt="Access Hair Education"
   class="header-logo"
 />
-<div class="eyebrow">L'Oréal Group Education</div>
-<h1 id="page-title">Education <span>Calendar</span></h1>
 </header>
 
 <!-- ████ TABS ████ -->
@@ -810,7 +805,7 @@ body{
     </div>
     <p class="footer-note">
       <img src="assets/images/logo-access.webp" alt="" class="footer-logo" />
-      Hover over any event for details · All events are indicative · by L'Oréal Professionnel
+      Hover over any event for details · All events are indicative · by L'Oréal Group
     </p>
   </div>
 </div>
@@ -829,7 +824,7 @@ body{
     <div id="weeks-container"></div>
     <p class="footer-note">
       <img src="assets/images/logo-access.webp" alt="" class="footer-logo" />
-      All events indicative · Dates subject to change · by L'Oréal Professionnel
+      All events indicative · Dates subject to change · by L'Oréal Group
     </p>
   </div>
 </div>
@@ -1392,7 +1387,7 @@ function showPDP(ev) {
   }
 
   var ctaLabel = ev.classCTALabel || 'Register Now';
-  
+
   var ctaHtml  = ev.classLink
     ? '<a class="pdp-cta-btn" href="' + ev.classLink + '" target="_blank" rel="noopener" ' +
         'style="background:' + color + '">' + ctaLabel + ' →</a>'
