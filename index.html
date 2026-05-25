@@ -1333,8 +1333,6 @@ function toggleLocationFilter(locKey) {
    SEARCH VIEW
 ══════════════════════════════════════════ */
 
-var SEARCH_FIELD = 'classLongDescription'; // 
-
 function handleSearch(query) {
   lastSearchQuery = query.trim();
 
@@ -1369,11 +1367,15 @@ function renderSearchResults(query) {
     return;
   }
 
-/* ── Filter events whose classLongDescription contains query ── */
-  var q       = query.toLowerCase();
-  var matched = allEvents.filter(function(ev) {
-    var desc = String(ev[SEARCH_FIELD] || '').toLowerCase();
-    return desc.indexOf(q) !== -1;
+/* ── Filter events that contains query ── */
+var matched = allEvents.filter(function(ev) {
+    var haystack = [
+      ev.classTitle,
+      ev.classArtists,
+      ev.classShortDescription,
+      ev.classLongDescription
+    ].join(' ').toLowerCase();
+    return haystack.indexOf(q) !== -1;
   });
 
   /* ── No results ── */
