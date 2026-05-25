@@ -7,21 +7,98 @@
 <title>L'Oréal Professional Hair Brands | Education Calendar</title>
 
 <style>
+/* ══════════════════════════════════════════
+   LORÉAL PRO FONT FAMILY
+   Registered as a single unified family
+   with 5 distinct weights.
+   font-display:swap prevents invisible text
+   during load — falls back to Segoe UI.
+══════════════════════════════════════════ */
+@font-face {
+  font-family: 'LorealPro';
+  src: url('assets/fonts/LOREAL_PRO-1-ExtraLight.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'LorealPro';
+  src: url('assets/fonts/LOREAL_PRO-2-Book.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'LorealPro';
+  src: url('assets/fonts/LOREAL_PRO-3-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'LorealPro';
+  src: url('assets/fonts/LOREAL_PRO-4-SemiBold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'LorealPro';
+  src: url('assets/fonts/LOREAL_PRO-5-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ── RESET ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 
-body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;min-height:100vh;}
+/* ── BASE
+   300 Book as the default reading weight —
+   comfortable for sustained screen reading
+── */
+body{
+  font-family:'LorealPro','Segoe UI',Arial,sans-serif;
+  font-weight:300;
+  background:#F5F4F0;
+  color:#1A1A1A;
+  min-height:100vh;
+}
 
-/* ── HEADER — KEEP dark header + gold accent ── */
+/* ── HEADER ── */
 .site-header{background:#1A1A1A;padding:24px 36px 16px;border-bottom:3px solid #C8A84B;}
-.eyebrow{font-size:10px;letter-spacing:3px;color:#C8A84B;text-transform:uppercase;margin-bottom:4px;}
+
+/* 600 SemiBold — small uppercase label needs authority without heaviness */
+.eyebrow{
+  font-size:10px;
+  letter-spacing:3px;
+  font-weight:600;
+  color:#C8A84B;
+  text-transform:uppercase;
+  margin-bottom:4px;
+}
+
+/* 700 Bold — primary page title, maximum hierarchy */
 .site-header h1{font-size:22px;font-weight:700;color:#FFF;}
 .site-header h1 span{color:#C8A84B;}
-.subtitle{font-size:12px;color:#888;margin-top:4px;}
+
+/* 300 Book — supporting subtitle, should recede behind h1 */
+.subtitle{font-size:12px;font-weight:300;color:#888;margin-top:4px;}
 
 /* ── TABS ── */
 .tab-bar{display:flex;gap:8px;background:#1A1A1A;padding:0 36px 16px;}
-.tab-btn{padding:9px 22px;border-radius:30px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all 0.2s;}
+
+/* 600 SemiBold — navigation items need clear legibility at small size */
+.tab-btn{
+  padding:9px 22px;
+  border-radius:30px;
+  border:none;
+  cursor:pointer;
+  font-family:'LorealPro','Segoe UI',Arial,sans-serif;
+  font-size:13px;
+  font-weight:600;
+  transition:all 0.2s;
+}
 .tab-btn.active{background:#C8A84B;color:#1A1A1A;}
 .tab-btn:not(.active){background:#2E2E2E;color:#AAA;}
 .tab-btn:not(.active):hover{background:#3E3E3E;color:#FFF;}
@@ -29,29 +106,69 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;mi
 /* ── VIEWS ── */
 .view{display:none;padding:32px 36px 60px;}
 .view.active{display:block;}
-.section-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#888;margin-bottom:6px;}
+
+/* 600 SemiBold — eyebrow label, authority at tiny size */
+.section-label{
+  font-size:10px;
+  letter-spacing:3px;
+  font-weight:600;
+  text-transform:uppercase;
+  color:#888;
+  margin-bottom:6px;
+}
+
+/* 700 Bold — section headings sit below h1 in hierarchy */
 .section-title{font-size:24px;font-weight:700;color:#1A1A1A;margin-bottom:24px;}
 .section-title span{color:#C8A84B;}
 
 /* ── LOADING / ERROR ── */
-.loading-box{text-align:center;padding:80px 20px;color:#888;font-size:15px;}
+/* 300 Book — utility text, no hierarchy needed */
+.loading-box{text-align:center;padding:80px 20px;color:#888;font-size:15px;font-weight:300;}
 .spinner{display:inline-block;animation:spin 1.2s linear infinite;font-size:28px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.error-box{background:#FFF0F0;border:1px solid #E4002B;border-radius:10px;padding:24px;color:#900;font-size:14px;line-height:1.7;margin:20px 0;}
+.error-box{background:#FFF0F0;border:1px solid #E4002B;border-radius:10px;padding:24px;color:#900;font-size:14px;line-height:1.7;margin:20px 0;font-weight:300;}
 .error-box code{background:#FFE0E0;padding:2px 6px;border-radius:4px;font-size:12px;}
-.no-data{text-align:center;padding:40px;color:#AAA;font-size:14px;}
+.no-data{text-align:center;padding:40px;color:#AAA;font-size:14px;font-weight:300;}
 
 /* ── YEAR NAV ── */
 .year-nav{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
-.year-btn{background:#1A1A1A;color:#C8A84B;border:none;border-radius:8px;padding:7px 14px;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s;}
+
+/* 700 Bold — navigation controls need high affordance */
+.year-btn{
+  background:#1A1A1A;
+  color:#C8A84B;
+  border:none;
+  border-radius:8px;
+  padding:7px 14px;
+  font-family:'LorealPro','Segoe UI',Arial,sans-serif;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:background 0.2s;
+}
 .year-btn:hover{background:#333;}
 .year-btn:disabled{background:#DDD;color:#AAA;cursor:not-allowed;}
+
+/* 700 Bold — year number is a landmark, must be bold */
 .year-display{font-size:18px;font-weight:700;color:#1A1A1A;min-width:50px;text-align:center;}
 
 /* ── SWIMLANE TABLE ── */
 .table-wrap{background:#FFF;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow-x:auto;}
 .swimlane-table{width:100%;border-collapse:collapse;min-width:1000px;}
-.swimlane-table th{background:#1A1A1A;color:#FFF;padding:12px 8px;font-size:11px;font-weight:600;text-align:center;border-right:1px solid #2E2E2E;position:sticky;top:0;z-index:3;}
+
+/* 600 SemiBold — column headers, functional label weight */
+.swimlane-table th{
+  background:#1A1A1A;
+  color:#FFF;
+  padding:12px 8px;
+  font-size:11px;
+  font-weight:600;
+  text-align:center;
+  border-right:1px solid #2E2E2E;
+  position:sticky;
+  top:0;
+  z-index:3;
+}
 .swimlane-table th.brand-col{text-align:left;padding-left:14px;color:#C8A84B;min-width:140px;position:sticky;left:0;z-index:4;box-shadow:2px 0 8px rgba(0,0,0,0.18);}
 .swimlane-table th.cur-month{color:#C8A84B;}
 .swimlane-table td{padding:8px 6px;border-right:1px solid #F0F0F0;border-bottom:1px solid #F0F0F0;vertical-align:top;min-height:50px;}
@@ -60,73 +177,209 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;mi
 .swimlane-table tr:hover td{background:#FAFEFF;}
 .swimlane-table tr:hover td.brand-label{background:#F0F0F0;}
 .b-icon{font-size:16px;display:block;margin-bottom:3px;}
-.b-name{font-size:11px;font-weight:700;}
+
+/* 600 SemiBold — brand name in swimlane label column */
+.b-name{font-size:11px;font-weight:600;}
 
 /* ── EVENT PILL (Swimlane) ── */
-.event-pill{display:block;border-radius:5px;padding:4px 7px;font-size:10px;font-weight:600;line-height:1.3;margin-bottom:4px;border-left:3px solid;cursor:default;position:relative;transition:transform 0.15s;}
+/* 500 Medium — pill text: legible at small size without shouting */
+.event-pill{
+  display:block;
+  border-radius:5px;
+  padding:4px 7px;
+  font-size:10px;
+  font-weight:500;
+  line-height:1.3;
+  margin-bottom:4px;
+  border-left:3px solid;
+  cursor:default;
+  position:relative;
+  transition:transform 0.15s;
+}
 .event-pill:hover{transform:scale(1.04);z-index:20;}
-.event-pill .tt{display:none;position:absolute;z-index:300;top:calc(100% + 5px);left:0;background:#1A1A1A;color:#FFF;font-size:11px;padding:8px 11px;border-radius:7px;white-space:nowrap;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,0.3);font-weight:400;line-height:1.5;}
+.event-pill .tt{
+  display:none;
+  position:absolute;
+  z-index:300;
+  top:calc(100% + 5px);
+  left:0;
+  background:#1A1A1A;
+  color:#FFF;
+  font-size:11px;
+  padding:8px 11px;
+  border-radius:7px;
+  white-space:nowrap;
+  pointer-events:none;
+  box-shadow:0 4px 14px rgba(0,0,0,0.3);
+  /* 300 Book — tooltip body copy, casual reading weight */
+  font-weight:300;
+  line-height:1.5;
+}
 .event-pill:hover .tt{display:block;}
 
 /* ── WEEK BLOCKS ── */
 .week-block{margin-bottom:40px;}
 .week-header{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap;}
-.week-number{background:#1A1A1A;color:#C8A84B;font-size:11px;font-weight:700;letter-spacing:1.5px;padding:5px 12px;border-radius:20px;text-transform:uppercase;white-space:nowrap;}
+
+/* 600 SemiBold — week number badge, functional label */
+.week-number{
+  background:#1A1A1A;
+  color:#C8A84B;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:1.5px;
+  padding:5px 12px;
+  border-radius:20px;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+/* 700 Bold — week date range, primary navigational landmark */
 .week-dates{font-size:15px;font-weight:700;color:#1A1A1A;}
 .week-divider{flex:1;height:1px;background:#E0E0E0;min-width:20px;}
-.event-count{font-size:11px;color:#888;white-space:nowrap;}
-.this-week-tag{display:inline-block;background:#E4002B;color:#FFF;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:1px;margin-left:8px;vertical-align:middle;}
+
+/* 300 Book — event count is secondary meta information */
+.event-count{font-size:11px;font-weight:300;color:#888;white-space:nowrap;}
+
+/* 700 Bold — high-urgency "THIS WEEK" tag */
+.this-week-tag{
+  display:inline-block;
+  background:#E4002B;
+  color:#FFF;
+  font-size:9px;
+  font-weight:700;
+  padding:2px 8px;
+  border-radius:10px;
+  letter-spacing:1px;
+  margin-left:8px;
+  vertical-align:middle;
+}
 
 /* ── EVENT CARDS ── */
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;}
-
-/* KEEP brand colour strip | CHANGE 6 spacing | CHANGE 3 softer shadow */
 .event-card{border-radius:8px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);background:#FFF;transition:transform 0.2s,box-shadow 0.2s;}
 .event-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.10);}
-.card-strip{height:6px;} /* KEEP — brand colour applied via JS */
+.card-strip{height:6px;}
 
 .card-body{padding:26px 28px 28px;}
 .card-brand-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
 .card-brand-icon{font-size:18px;}
 
-.card-brand-name{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#C0C0C0;}
+/* 600 SemiBold — brand name label, functional authority */
+.card-brand-name{
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  color:#C0C0C0;
+}
 
-.card-type-badge{margin-left:auto;font-size:9px;font-weight:700;padding:3px 10px;border-radius:3px;letter-spacing:1.5px;text-transform:uppercase;background:transparent !important;color:#C8A84B !important;border:1.5px solid #C8A84B !important;}
+/* 600 SemiBold — type badge is a categorical label */
+.card-type-badge{
+  margin-left:auto;
+  font-size:9px;
+  font-weight:600;
+  padding:3px 10px;
+  border-radius:3px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  background:transparent !important;
+  color:#C8A84B !important;
+  border:1.5px solid #C8A84B !important;
+}
 
-.card-title{font-size:20px;font-weight:800;color:#0D0D0D;margin-bottom:6px;line-height:1.2;}
-.card-artist{font-size:12px;font-weight:300;font-style:normal;color:#AAAAAA;letter-spacing:0.3px;margin-bottom:14px;}
-.card-desc{font-size:13px;font-weight:400;color:#666;line-height:1.75;margin-bottom:18px;}
+/* 700 Bold — card title is the primary hook, must command attention */
+.card-title{font-size:20px;font-weight:700;color:#0D0D0D;margin-bottom:6px;line-height:1.2;}
+
+/* 100 ExtraLight — "with Artist Name" is editorial, elegant, deliberately light
+   Creates a beautiful typographic contrast against the Bold title above */
+.card-artist{
+  font-size:12px;
+  font-weight:100;
+  font-style:normal;
+  color:#AAAAAA;
+  letter-spacing:0.5px;
+  margin-bottom:14px;
+}
+
+/* 300 Book — body description, comfortable sustained reading weight */
+.card-desc{font-size:13px;font-weight:300;color:#666;line-height:1.75;margin-bottom:18px;}
 
 .card-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;margin-bottom:18px;padding-top:14px;border-top:1px solid #F0EDE8;}
-.card-meta-label{font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#CCCCCC;margin-bottom:2px;}
-.card-meta-value{font-size:11px;font-weight:600;color:#888;}
 
-.card-date{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#AAAAAA;margin-bottom:5px;}
-.card-location{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#AAAAAA;margin-bottom:18px;padding-top:5px;border-top:1px solid #F0EDE8;}
+/* 600 SemiBold — micro-labels above meta values */
+.card-meta-label{font-size:8px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#CCCCCC;margin-bottom:2px;}
 
+/* 500 Medium — meta values sit between label and body copy */
+.card-meta-value{font-size:11px;font-weight:500;color:#888;}
+
+/* 500 Medium — date and location are functional meta, not primary */
+.card-date{font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#AAAAAA;margin-bottom:5px;}
+.card-location{font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#AAAAAA;margin-bottom:18px;padding-top:5px;border-top:1px solid #F0EDE8;}
+
+/* 700 Bold — price is a high-importance commercial signal */
 .card-price{display:inline-block;font-size:13px;font-weight:700;color:#1A1A1A;margin-bottom:16px;}
 
-/* KEEP brand colour on CTA — this is the one place per-brand colour stays */
-.card-cta{display:inline-block;padding:11px 20px;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;border:none;letter-spacing:1px;transition:opacity 0.2s;text-decoration:none;}
+/* 700 Bold — CTA is the action trigger, must be maximally legible */
+.card-cta{
+  display:inline-block;
+  padding:11px 20px;
+  border-radius:4px;
+  font-family:'LorealPro','Segoe UI',Arial,sans-serif;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+  border:none;
+  letter-spacing:1px;
+  transition:opacity 0.2s;
+  text-decoration:none;
+}
 .card-cta:hover{opacity:0.82;}
 
 /* ── SPECIAL BADGES ── */
-.member-badge{display:inline-block;font-size:9px;font-weight:700;border:1px solid #C9A84C;color:#C9A84C;padding:2px 8px;border-radius:3px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
+/* 600 SemiBold — membership/access badge, institutional weight */
+.member-badge{
+  display:inline-block;
+  font-size:9px;
+  font-weight:600;
+  border:1px solid #C9A84C;
+  color:#C9A84C;
+  padding:2px 8px;
+  border-radius:3px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
 
-.free-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;background:transparent;color:#1A1A1A;border:1.5px solid #1A1A1A;padding:3px 8px;border-radius:3px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
+.free-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  font-size:9px;
+  font-weight:600;
+  background:transparent;
+  color:#1A1A1A;
+  border:1.5px solid #1A1A1A;
+  padding:3px 8px;
+  border-radius:3px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
 
 /* ── PRO.CONNECT DARK CARD ── */
 .dark-card{background:#1C1C1C !important;position:relative;}
 .dark-card::after{content:'';position:absolute;top:0;right:0;bottom:0;width:3px;background:repeating-linear-gradient(to bottom,#C9A84C 0,#C9A84C 8px,transparent 8px,transparent 14px);}
 .dark-card .card-title{color:#F5F0E8;}
-.dark-card .card-artist{color:#777;}
+.dark-card .card-artist{color:#555;}
 .dark-card .card-date{color:#C9A84C;}
 .dark-card .card-desc{color:#AAA;}
 .dark-card .card-location{color:#666;border-top-color:#2E2E2E;}
 .dark-card .card-brand-name{color:#555;}
 
 /* ── FOOTER NOTE ── */
-.footer-note{font-size:11px;color:#AAA;margin-top:16px;text-align:right;}
+/* 300 Book — fine print, should be light and unobtrusive */
+.footer-note{font-size:11px;font-weight:300;color:#AAA;margin-top:16px;text-align:right;}
 
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
@@ -140,7 +393,27 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;mi
 .pdp-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;}
 .pdp-overlay.open{display:flex;}
 .pdp-wrap{position:relative;width:100%;max-width:580px;}
-.pdp-close{position:absolute;top:-14px;right:-14px;width:36px;height:36px;border-radius:50%;border:none;background:#FFF;color:#333;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.2);z-index:10;line-height:36px;text-align:center;transition:background 0.15s;}
+
+/* 700 Bold — close button must be immediately obvious */
+.pdp-close{
+  position:absolute;
+  top:-14px;
+  right:-14px;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  border:none;
+  background:#FFF;
+  color:#333;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 2px 10px rgba(0,0,0,0.2);
+  z-index:10;
+  line-height:36px;
+  text-align:center;
+  transition:background 0.15s;
+}
 .pdp-close:hover{background:#F0F0F0;}
 
 .pdp-modal{background:#FFF;border-radius:12px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,0.35);animation:pdpIn 0.22s ease;}
@@ -150,38 +423,117 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;mi
 .pdp-brand-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
 .pdp-brand-icon{font-size:22px;}
 
-.pdp-brand-name{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#C0C0C0;}
+/* 600 SemiBold — brand label inside PDP header row */
+.pdp-brand-name{
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  color:#C0C0C0;
+}
 
-.pdp-type-badge{margin-left:auto;font-size:9px;font-weight:700;padding:4px 11px;border-radius:3px;letter-spacing:1.5px;text-transform:uppercase;background:transparent !important;color:#C8A84B !important;border:1.5px solid #C8A84B !important;}
+/* 600 SemiBold — type badge in PDP matches card badge weight */
+.pdp-type-badge{
+  margin-left:auto;
+  font-size:9px;
+  font-weight:600;
+  padding:4px 11px;
+  border-radius:3px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  background:transparent !important;
+  color:#C8A84B !important;
+  border:1.5px solid #C8A84B !important;
+}
 
-.pdp-title{font-size:26px;font-weight:800;color:#0D0D0D;line-height:1.15;margin-bottom:6px;}
-.pdp-artist{font-size:13px;font-weight:300;font-style:normal;color:#AAAAAA;letter-spacing:0.3px;margin-bottom:20px;}
+/* 700 Bold — PDP title is the largest text element in the modal */
+.pdp-title{font-size:26px;font-weight:700;color:#0D0D0D;line-height:1.15;margin-bottom:6px;}
+
+/* 100 ExtraLight — "with Artist Name" in PDP: editorial elegance,
+   intentional contrast against the 700 Bold title directly above */
+.pdp-artist{
+  font-size:13px;
+  font-weight:100;
+  font-style:normal;
+  color:#AAAAAA;
+  letter-spacing:0.5px;
+  margin-bottom:20px;
+}
 
 .pdp-meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
 
-.pdp-meta-chip{display:flex;align-items:center;gap:5px;background:#F8F7F4;border-radius:4px;padding:7px 12px;font-size:11px;color:#777;font-weight:600;letter-spacing:0.5px;border:1px solid #EEEBE6;}
+/* 500 Medium — meta chips: functional data, between label and body weight */
+.pdp-meta-chip{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  background:#F8F7F4;
+  border-radius:4px;
+  padding:7px 12px;
+  font-size:11px;
+  font-weight:500;
+  color:#777;
+  letter-spacing:0.5px;
+  border:1px solid #EEEBE6;
+}
 
 .pdp-divider{height:1px;background:#F0F0F0;margin:20px 0;}
-.pdp-desc-eyebrow{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#CCCCCC;margin-bottom:12px;}
-.pdp-desc{font-size:14px;color:#555;line-height:1.8;}
+
+/* 600 SemiBold — eyebrow label above description */
+.pdp-desc-eyebrow{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#CCCCCC;margin-bottom:12px;}
+
+/* 300 Book — long description body copy, optimised for reading */
+.pdp-desc{font-size:14px;font-weight:300;color:#555;line-height:1.8;}
 .pdp-cta-area{margin-top:28px;}
 
-/* KEEP brand colour on CTA */
-.pdp-cta-btn{display:block;width:100%;padding:18px;border-radius:4px;font-size:13px;font-weight:700;text-align:center;cursor:pointer;border:none;letter-spacing:1px;transition:opacity 0.2s;text-decoration:none;}
+/* 700 Bold — PDP primary CTA, the most important action on screen */
+.pdp-cta-btn{
+  display:block;
+  width:100%;
+  padding:18px;
+  border-radius:4px;
+  font-family:'LorealPro','Segoe UI',Arial,sans-serif;
+  font-size:13px;
+  font-weight:700;
+  text-align:center;
+  cursor:pointer;
+  border:none;
+  letter-spacing:1px;
+  transition:opacity 0.2s;
+  text-decoration:none;
+}
 .pdp-cta-btn:hover{opacity:0.84;}
 .pdp-cta-btn[disabled]{opacity:0.45;cursor:not-allowed;}
-.pdp-no-link{text-align:center;font-size:11px;color:#BBB;margin-top:10px;}
 
-.pdp-free-chip{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;background:transparent;color:#1A1A1A;border:1.5px solid #1A1A1A;padding:3px 9px;border-radius:3px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
-.pdp-member-chip{display:inline-block;font-size:9px;font-weight:700;border:1px solid #C9A84C;color:#C9A84C;padding:3px 9px;border-radius:3px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
+/* 300 Book — "coming soon" note is low-hierarchy supporting text */
+.pdp-no-link{text-align:center;font-size:11px;font-weight:300;color:#BBB;margin-top:10px;}
+
+.pdp-free-chip{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:600;background:transparent;color:#1A1A1A;border:1.5px solid #1A1A1A;padding:3px 9px;border-radius:3px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
+.pdp-member-chip{display:inline-block;font-size:9px;font-weight:600;border:1px solid #C9A84C;color:#C9A84C;padding:3px 9px;border-radius:3px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
 
 /* ── PILL DATE LABEL ── */
-.pill-title{display:block;line-height:1.3;}
-.pill-date{display:block;font-size:9px;font-weight:500;opacity:0.65;margin-top:3px;letter-spacing:0.2px;}
+/* 500 Medium — pill title text */
+.pill-title{display:block;font-weight:500;line-height:1.3;}
+
+/* 300 Book — pill date is secondary info below the title */
+.pill-date{display:block;font-size:9px;font-weight:300;opacity:0.65;margin-top:3px;letter-spacing:0.2px;}
 
 /* ── YEARLY TYPE FILTER BAR ── */
 .yearly-type-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;}
-.type-filter-btn{padding:8px 22px;border-radius:30px;border:2px solid;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.4px;background:#FFF;}
+
+/* 600 SemiBold — filter buttons are labelling controls */
+.type-filter-btn{
+  padding:8px 22px;
+  border-radius:30px;
+  border:2px solid;
+  font-family:'LorealPro','Segoe UI',Arial,sans-serif;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s;
+  letter-spacing:0.4px;
+  background:#FFF;
+}
 .type-filter-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.12);}
 
 /* ── PAST EVENT DIMMING ── */
@@ -189,17 +541,69 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;mi
 .event-pill.past-event:hover{opacity:0.55;}
 
 /* ── FREE BADGE ON PILL ── */
-.pill-free{display:inline-block;font-size:8px;font-weight:800;background:#0057A8;color:#FFF;padding:1px 5px;border-radius:3px;margin-left:5px;letter-spacing:0.5px;vertical-align:middle;line-height:1.6;}
+/* 700 Bold — FREE tag needs maximum impact at tiny size */
+.pill-free{
+  display:inline-block;
+  font-size:8px;
+  font-weight:700;
+  background:#0057A8;
+  color:#FFF;
+  padding:1px 5px;
+  border-radius:3px;
+  margin-left:5px;
+  letter-spacing:0.5px;
+  vertical-align:middle;
+  line-height:1.6;
+}
 
 /* ── UPCOMING ONLY TOGGLE ── */
-.upcoming-toggle{padding:7px 18px;border-radius:30px;border:2px solid #1A1A1A;background:#FFF;color:#1A1A1A;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-left:auto;}
+/* 600 SemiBold — toggle is a filter control, label weight */
+.upcoming-toggle{
+  padding:7px 18px;
+  border-radius:30px;
+  border:2px solid #1A1A1A;
+  background:#FFF;
+  color:#1A1A1A;
+  font-family:'LorealPro','Segoe UI',Arial,sans-serif;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s;
+  margin-left:auto;
+}
 .upcoming-toggle.toggle-active{background:#1A1A1A;color:#FFF;}
 .upcoming-toggle:hover{box-shadow:0 4px 12px rgba(0,0,0,0.12);}
 
 /* ── BRAND PILL FILTER BAR ── */
 .brand-pill-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;}
-.bpf-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#BBB;margin-right:4px;white-space:nowrap;flex-shrink:0;}
-.brand-pill-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:30px;border:2px solid transparent;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+
+/* 500 Medium — small label preceding filter pills */
+.bpf-label{
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:#BBB;
+  margin-right:4px;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+
+/* 600 SemiBold — brand pill buttons are navigation/filter controls */
+.brand-pill-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:6px 14px;
+  border-radius:30px;
+  border:2px solid transparent;
+  font-family:'LorealPro','Segoe UI',Arial,sans-serif;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s;
+  white-space:nowrap;
+}
 .brand-pill-btn:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,0.12);}
 .brand-pill-btn.brand-off{background:#F0F0F0 !important;color:#CCC !important;border-color:#E0E0E0 !important;}
 
@@ -213,21 +617,44 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;mi
    SEARCH VIEW
 ══════════════════════════════════════════ */
 .search-hero{text-align:center;padding:0 0 32px;}
-.search-subtitle{font-size:13px;color:#888;margin-top:-16px;margin-bottom:28px;}
+
+/* 300 Book — subtitle is supporting copy, should be light */
+.search-subtitle{font-size:13px;font-weight:300;color:#888;margin-top:-16px;margin-bottom:28px;}
 .search-input-wrap{position:relative;max-width:640px;margin:0 auto;display:flex;align-items:center;}
 .search-icon{position:absolute;left:18px;font-size:16px;pointer-events:none;z-index:1;}
-.search-input{width:100%;padding:16px 48px;border-radius:50px;border:2px solid #E0E0E0;font-size:15px;font-family:'Segoe UI',Arial,sans-serif;color:#1A1A1A;background:#FFF;box-shadow:0 4px 24px rgba(0,0,0,0.08);outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+
+/* 300 Book — search input uses book weight for natural typing feel */
+.search-input{
+  width:100%;
+  padding:16px 48px;
+  border-radius:50px;
+  border:2px solid #E0E0E0;
+  font-family:'LorealPro','Segoe UI',Arial,sans-serif;
+  font-size:15px;
+  font-weight:300;
+  color:#1A1A1A;
+  background:#FFF;
+  box-shadow:0 4px 24px rgba(0,0,0,0.08);
+  outline:none;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
 .search-input:focus{border-color:#C8A84B;box-shadow:0 4px 28px rgba(200,168,75,0.18);}
-.search-input::placeholder{color:#BBB;}
+.search-input::placeholder{color:#BBB;font-weight:300;}
 .search-clear{position:absolute;right:14px;background:none;border:none;font-size:14px;color:#BBB;cursor:pointer;padding:6px;border-radius:50%;display:none;transition:color 0.15s;line-height:1;}
 .search-clear:hover{color:#555;}
 .search-clear.visible{display:block;}
-.search-meta{font-size:11px;color:#AAA;margin-top:12px;min-height:16px;letter-spacing:0.5px;}
+
+/* 300 Book — result count meta text */
+.search-meta{font-size:11px;font-weight:300;color:#AAA;margin-top:12px;min-height:16px;letter-spacing:0.5px;}
 .search-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;max-width:1200px;margin:0 auto;}
-.search-prompt{grid-column:1/-1;text-align:center;padding:60px 20px;color:#CCC;font-size:15px;}
+
+/* 300 Book — empty state prompts are low-hierarchy supporting text */
+.search-prompt{grid-column:1/-1;text-align:center;padding:60px 20px;color:#CCC;font-size:15px;font-weight:300;}
 .search-prompt .prompt-icon{font-size:48px;display:block;margin-bottom:16px;opacity:0.5;}
-.search-no-results{grid-column:1/-1;text-align:center;padding:60px 20px;color:#AAA;font-size:14px;}
-.search-no-results strong{display:block;font-size:18px;color:#CCC;margin-bottom:8px;}
+.search-no-results{grid-column:1/-1;text-align:center;padding:60px 20px;color:#AAA;font-size:14px;font-weight:300;}
+
+/* 600 SemiBold — "No results found" heading needs presence */
+.search-no-results strong{display:block;font-size:18px;font-weight:600;color:#CCC;margin-bottom:8px;}
 </style>
 
 </head>
@@ -338,26 +765,24 @@ var TYPE_BADGE = {
 /* ══════════════════════════════════════════
    2. STATE
 ══════════════════════════════════════════ */
-var dateLookup   = {};   // { "18/05/2026": { weekNum:21, weekRange:"..." } }
-var brandLookup  = {};   // { "redken": { brandName, brandIcon, brandColor, textColor, isProConnect } }
-var brandOrder   = [];   // preserves CSV row order for swimlane
-var allEvents    = [];   // all parsed event rows
+var dateLookup   = {};
+var brandLookup  = {};
+var brandOrder   = [];
+var allEvents    = [];
 var displayYear  = new Date().getFullYear();
-var activeTypes     = [];   // populated on init with all type keys
-var activeLocations = [];   // populated on init with all location keys
+var activeTypes     = [];
+var activeLocations = [];
 var activeBrands = [];
 var showUpcomingOnly = false;
 var lastSearchQuery = '';
 var availableYears = [];
 var today          = getTodayStr();
-var currentMonth   = new Date().getMonth();   // 0–11, auto from device
-var currentYear    = new Date().getFullYear(); // auto from device
-var currentWeekNum = null;                    // set after dates.csv loads
+var currentMonth   = new Date().getMonth();
+var currentYear    = new Date().getFullYear();
+var currentWeekNum = null;
 
 /* ══════════════════════════════════════════
    3. CSV PARSER
-   Handles: quoted fields, commas inside quotes, escaped quotes ("")
-   Auto-casts: "true"→true, "false"→false, numeric strings→Number
 ══════════════════════════════════════════ */
 function parseCSV(raw) {
   raw = raw.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
@@ -369,8 +794,8 @@ function parseCSV(raw) {
   for (var i = 0; i < raw.length; i++) {
     var c = raw[i], nx = raw[i + 1];
     if (inQ) {
-      if (c === '"' && nx === '"') { field += '"'; i++; }   // escaped "
-      else if (c === '"')          { inQ = false; }          // closing "
+      if (c === '"' && nx === '"') { field += '"'; i++; }
+      else if (c === '"')          { inQ = false; }
       else                         { field += c; }
     } else {
       if      (c === '"')  { inQ = true; }
@@ -386,7 +811,7 @@ function parseCSV(raw) {
   var headers = rows[0];
   var out = [];
   for (var r = 1; r < rows.length; r++) {
-    if (rows[r].length === 1 && rows[r][0] === '') continue; // skip blank lines
+    if (rows[r].length === 1 && rows[r][0] === '') continue;
     var obj = {};
     for (var h = 0; h < headers.length; h++) {
       obj[headers[h]] = (rows[r][h] !== undefined) ? rows[r][h] : '';
@@ -408,7 +833,6 @@ function cast(v) {
    4. DATE UTILITIES
 ══════════════════════════════════════════ */
 function getTodayStr() {
-  // Returns today in DD/MM/YYYY using the user's device clock & timezone
   var t  = new Date();
   var dd = String(t.getDate()).padStart(2, '0');
   var mm = String(t.getMonth() + 1).padStart(2, '0');
@@ -416,25 +840,21 @@ function getTodayStr() {
 }
 
 function getMonthFromDate(dateStr) {
-  // "22/05/2026" → 4 (0-indexed May)
   var p = dateStr.split('/');
   return p.length === 3 ? parseInt(p[1]) - 1 : -1;
 }
 
 function getYearFromDate(dateStr) {
-  // "22/05/2026" → 2026
   var p = dateStr.split('/');
   return p.length === 3 ? parseInt(p[2]) : -1;
 }
 
 function isFreeEvent(ev) {
-  // Derived from classPrice — no CSV column needed
   var p = String(ev.classPrice).trim().toLowerCase();
   return p === '' || p === '0' || p === 'free';
 }
 
 function isProConnectBrand(brandKey) {
-  // Derived from brands.csv isProConnect column
   var b = brandLookup[brandKey];
   return b && b.isProConnect === true;
 }
@@ -482,33 +902,27 @@ Promise.all([
 });
 
 /* ══════════════════════════════════════════
-   6. INIT — wire up all data & render
+   6. INIT
 ══════════════════════════════════════════ */
 function initApp(metaRows, brandsRows, eventsRows, datesRows) {
 
-  /* — meta.csv — */
   var meta = {};
   metaRows.forEach(function(r) { meta[r.key] = r.value; });
 
-  /* — brands.csv → lookup + ordered list — */
   brandsRows.forEach(function(b) {
     brandLookup[b.brandKey] = b;
     brandOrder.push(b.brandKey);
   });
 
-  /* — events.csv — */
   allEvents = eventsRows;
 
-  /* — dates.csv → date lookup dictionary — */
   datesRows.forEach(function(d) {
     dateLookup[d.date] = { weekNum: Number(d.weekNum), weekRange: d.weekRange };
   });
 
-  /* — derive currentWeekNum from device clock — */
   var todayEntry = dateLookup[today];
   currentWeekNum = todayEntry ? todayEntry.weekNum : null;
 
-  /* — determine available years from events — */
   var yearSet = {};
   allEvents.forEach(function(ev) {
     var y = getYearFromDate(ev.classDate);
@@ -519,12 +933,10 @@ function initApp(metaRows, brandsRows, eventsRows, datesRows) {
     displayYear = availableYears[0];
   }
 
-  /* — update page header from meta — */
   document.title = "L'Oréal Professional Brands | " + (meta.title || 'Education Calendar');
   document.getElementById('page-title').innerHTML =
     (meta.title || 'Education Calendar').replace('Calendar', '<span>Calendar</span>');
 
-  /* — render both views — */
   activeBrands    = brandOrder.slice();
   activeTypes     = YEARLY_TYPE_DEFS.map(function(d) { return d.key; });
   activeLocations = LOCATION_DEFS.map(function(d) { return d.key; });
@@ -537,16 +949,14 @@ function initApp(metaRows, brandsRows, eventsRows, datesRows) {
   buildSwimlane();
   renderWeeks();
 
-  /* — reveal content — */
   hide('loading-yearly'); show('yearly-content');
   hide('loading-weeks');  show('weeks-content');
 }
 
 /* ══════════════════════════════════════════
-   8. SWIMLANE (Yearly Snapshot)
+   8. SWIMLANE
 ══════════════════════════════════════════ */
 function buildSwimlane() {
-  /* year display + nav buttons */
   document.getElementById('year-display').textContent = displayYear;
   document.getElementById('btn-prev-year').disabled =
     availableYears.indexOf(displayYear) <= 0;
@@ -556,12 +966,10 @@ function buildSwimlane() {
   var table = document.getElementById('swimlane-table');
   table.innerHTML = '';
 
-  /* filter events to selected display year */
   var yearEvents = allEvents.filter(function(ev) {
     return getYearFromDate(ev.classDate) === displayYear;
   });
 
-  /* — HEADER ROW — */
   var thead = document.createElement('thead');
   var hr = document.createElement('tr');
   var th0 = el('th', 'brand-col');
@@ -570,34 +978,29 @@ function buildSwimlane() {
   MONTHS.forEach(function(m, i) {
     var th = document.createElement('th');
     th.textContent = m;
-    // highlight current month only when viewing the current year
     if (i === currentMonth && displayYear === currentYear) th.className = 'cur-month';
     hr.appendChild(th);
   });
   thead.appendChild(hr);
   table.appendChild(thead);
 
-  /* — BODY ROWS — */
   var tbody = document.createElement('tbody');
 
   brandOrder.forEach(function(key) {
     var brand = brandLookup[key];
     if (!brand) return;
 
-    /* check brand has any events this year */
     var brandEvents = yearEvents.filter(function(ev) { return ev.brandKey === key; });
 
     var tr = document.createElement('tr');
-    tr.setAttribute('data-brandkey', key);  
+    tr.setAttribute('data-brandkey', key);
 
-    /* brand label cell */
     var tdLabel = el('td', 'brand-label');
     tdLabel.innerHTML =
       '<span class="b-icon">' + brand.brandIcon + '</span>' +
       '<span class="b-name" style="color:' + brand.brandColor + '">' + brand.brandName + '</span>';
     tr.appendChild(tdLabel);
 
-    /* month cells */
     MONTHS.forEach(function(m, mi) {
       var td = document.createElement('td');
       if (mi === currentMonth && displayYear === currentYear) td.className = 'cur-month';
@@ -615,7 +1018,6 @@ function buildSwimlane() {
           if (isPastDate(ev.classDate)) pill.classList.add('past-event');
           pill.addEventListener('click', (function(evData){ return function(){ showPDP(evData); }; })(ev));
 
-          /* tooltip includes artist if present */
           var tipArtist = ev.classArtists ? ' · ' + ev.classArtists : '';
           var tipPrice  = isFreeEvent(ev) ? ' · Free' : (ev.classPrice ? ' · $' + ev.classPrice : '');
 
@@ -627,7 +1029,7 @@ function buildSwimlane() {
               '📍 ' + ev.classLocation + '<br>' +
               '📅 ' + formatDatetime(ev.classDate, ev.classStartTime, ev.classEndTime, false) +
             '</span>';
-          
+
           td.appendChild(pill);
         });
 
@@ -640,22 +1042,19 @@ function buildSwimlane() {
   table.appendChild(tbody);
 }
 
-/* Year navigation */
 function changeYear(dir) {
   var idx = availableYears.indexOf(displayYear) + dir;
   if (idx < 0 || idx >= availableYears.length) return;
   displayYear = availableYears[idx];
   buildSwimlane();
-  applyBrandRowVisibility();            // re-hide any deselected brand rows
-  applyPillVisibility(); 
+  applyBrandRowVisibility();
+  applyPillVisibility();
 }
 
-
 /* ══════════════════════════════════════════
-   11. WEEK CARDS (Next 8 Weeks)
+   11. WEEK CARDS
 ══════════════════════════════════════════ */
 function getUpcomingEvents() {
-  /* All events whose classDate falls within currentWeekNum → currentWeekNum+7 */
   if (currentWeekNum === null) return [];
   return allEvents.filter(function(ev) {
     var entry = dateLookup[ev.classDate];
@@ -674,7 +1073,6 @@ function renderWeeks() {
     return;
   }
 
-/* filter by shared brand + type + location state */
   var upcoming = getUpcomingEvents().filter(function(ev) {
     var brandOk    = activeBrands.indexOf(ev.brandKey) !== -1;
     var typeOk     = activeTypes.indexOf(ev.classType) !== -1;
@@ -688,7 +1086,6 @@ function renderWeeks() {
     return;
   }
 
-  /* group by weekNum */
   var weekMap = {};
   upcoming.forEach(function(ev) {
     var entry = dateLookup[ev.classDate];
@@ -698,12 +1095,10 @@ function renderWeeks() {
     weekMap[wn].events.push(ev);
   });
 
-  /* render in order */
   Object.keys(weekMap).sort(function(a,b){ return a-b; }).forEach(function(wn) {
     var week = weekMap[wn];
     var isNow = Number(wn) === currentWeekNum;
 
-    /* week block */
     var block = el('div', 'week-block');
     block.innerHTML =
       '<div class="week-header">' +
@@ -716,7 +1111,6 @@ function renderWeeks() {
           ' event' + (week.events.length !== 1 ? 's' : '') + '</span>' +
       '</div>';
 
-    /* cards grid */
     var grid = el('div', 'cards-grid');
     week.events.forEach(function(ev) {
       grid.appendChild(buildCard(ev));
@@ -740,23 +1134,19 @@ function buildCard(ev) {
 
   var card = el('div', 'event-card' + (procon ? ' dark-card' : ''));
 
-  /* special badge */
   var specialBadge = '';
   if (procon) specialBadge = '<div class="member-badge">👑 PRO.CONNECT MEMBER EVENT</div>';
   else if (free) specialBadge = '<div class="free-badge">🔓 FREE</div>';
 
-  /* price display (only if paid) */
   var priceDisplay = '';
   if (!free && ev.classPrice) {
     priceDisplay = '<div class="card-price" style="color:' + color + '">$' + ev.classPrice + '</div><br>';
   }
 
-  /* artist line */
   var artistLine = ev.classArtists
     ? '<div class="card-artist">with ' + ev.classArtists + '</div>'
     : '';
 
-  /* CTA — link if classLink provided, button otherwise */
   var ctaLabel = ev.classCTALabel || 'Find Out More';
   var ctaEl = ev.classLink
     ? '<a class="card-cta" href="' + ev.classLink + '" target="_blank" rel="noopener" ' +
@@ -796,7 +1186,6 @@ function switchView(v) {
   document.getElementById('view-' + v).classList.add('active');
   document.getElementById('tab-' + v).classList.add('active');
 
-  /* initialise search prompt when switching to search tab */
   if (v === 'search') {
     renderSearchResults(lastSearchQuery);
     var input = document.getElementById('search-input');
@@ -813,9 +1202,8 @@ function hide(id) { document.getElementById(id).style.display = 'none'; }
 function show(id) { document.getElementById(id).style.display = 'block'; }
 
 /* ══════════════════════════════════════════
-   EVENT DETAIL PDP — open / close / render
+   EVENT DETAIL PDP
 ══════════════════════════════════════════ */
-
 function showPDP(ev) {
   var brand   = brandLookup[ev.brandKey] || {};
   var color   = brand.brandColor || '#1A1A1A';
@@ -824,17 +1212,14 @@ function showPDP(ev) {
   var free    = isFreeEvent(ev);
   var badge   = TYPE_BADGE[ev.classType] || { bg:'#F0F0F0', color:'#555' };
 
-  /* ── special badge ── */
   var specialBadge = '';
   if (procon) specialBadge = '<div class="pdp-member-chip">👑 PRO.CONNECT MEMBER EVENT</div>';
   else if (free) specialBadge = '<div class="pdp-free-chip">🔓 FREE EVENT</div>';
 
-  /* ── artist line ── */
   var artistLine = ev.classArtists
     ? '<div class="pdp-artist">with ' + ev.classArtists + '</div>'
     : '';
 
-  /* ── meta chips (date / location / price) ── */
   var priceChip = '';
   if (free) {
     priceChip = '<div class="pdp-meta-chip">🔓 Free to attend</div>';
@@ -842,7 +1227,6 @@ function showPDP(ev) {
     priceChip = '<div class="pdp-meta-chip">💰 $' + ev.classPrice + '</div>';
   }
 
-  /* ── CTA button ── */
   var ctaLabel = ev.classCTALabel || 'Register Now';
   var ctaHtml  = ev.classLink
     ? '<a class="pdp-cta-btn" href="' + ev.classLink + '" target="_blank" rel="noopener" ' +
@@ -851,7 +1235,6 @@ function showPDP(ev) {
         'style="background:' + color + ';color:' + textCol + '">' + ctaLabel + ' →</button>' +
       '<p class="pdp-no-link">Registration link coming soon</p>';
 
-  /* ── build modal HTML ── */
   document.getElementById('pdp-modal').innerHTML =
     '<div class="pdp-strip" style="background:' + color + '"></div>' +
     '<div class="pdp-body">' +
@@ -878,7 +1261,6 @@ function showPDP(ev) {
       '<div class="pdp-cta-area">' + ctaHtml + '</div>' +
     '</div>';
 
-  /* ── show overlay ── */
   document.getElementById('pdp-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -889,18 +1271,14 @@ function closePDP() {
 }
 
 function handlePDPOverlayClick(e) {
-  /* only close if user clicked the dark backdrop itself, not the modal */
   if (e.target === document.getElementById('pdp-overlay')) closePDP();
 }
 
-/* close on Escape key */
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closePDP();
 });
 
-/* formats "22/05/2026" → "22 May" for pill display */
 function formatPillDate(dateStr) {
-  /* "22/05/2026" → "Tue 22 May" — used on swimlane pills */
   var p = dateStr.split('/');
   if (p.length !== 3) return dateStr;
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -929,7 +1307,7 @@ function buildYearlyTypeFilter(containerId) {
     btn.className = 'type-filter-btn';
     btn.setAttribute('data-type', t.key);
     btn.textContent = t.label;
-    setTypeButtonActive(btn, t, true); // all active on build
+    setTypeButtonActive(btn, t, true);
     btn.addEventListener('click', function() { toggleTypeFilter(t.key); });
     bar.appendChild(btn);
   });
@@ -937,11 +1315,7 @@ function buildYearlyTypeFilter(containerId) {
 
 /* ══════════════════════════════════════════
    TIME & DURATION UTILITIES
-   Handles 12hr (9:00 AM) and 24hr (09:00)
-   Returns empty string gracefully if times
-   are missing from the CSV row
 ══════════════════════════════════════════ */
-
 function parseTimeToMins(t) {
   if (!t || String(t).trim() === '') return null;
   t = String(t).trim();
@@ -971,32 +1345,25 @@ function calcDuration(startTime, endTime) {
 }
 
 function formatTimeRange(startTime, endTime) {
-  /* returns "9:00 AM – 11:00 AM (2h)" or "" if no times set */
   var s = startTime ? String(startTime).trim() : '';
   var e = endTime   ? String(endTime).trim()   : '';
   if (!s && !e) return '';
   var dur    = calcDuration(s, e);
   var durStr = dur ? ' (' + dur + ')' : '';
-  if (s && e) return s + ' \u2013 ' + e + durStr;  // – en dash
+  if (s && e) return s + ' \u2013 ' + e + durStr;
   return s || e;
 }
 
 function formatDatetime(dateStr, startTime, endTime, useShortDate) {
-  /*
-    useShortDate = true  → "22 May | 9:00 AM – 11:00 AM (2h)"   (pills)
-    useShortDate = false → "22/05/2026 | 9:00 AM – 11:00 AM (2h)" (cards / PDP)
-    If no times in CSV → just returns the date with no pipe
-  */
   var d = useShortDate ? formatPillDate(dateStr) : formatLongDate(dateStr);
   var t = formatTimeRange(startTime, endTime);
-  return t ? d + ' \u00a0|\u00a0 ' + t : d;  // non-breaking spaces around pipe
+  return t ? d + ' \u00a0|\u00a0 ' + t : d;
 }
 
 /* ══════════════════════════════════════════
    DAY OF WEEK HELPERS
 ══════════════════════════════════════════ */
 function getDayOfWeek(dateStr) {
-  /* "22/05/2026" → "Tue" */
   var p = dateStr.split('/');
   if (p.length !== 3) return '';
   var d = new Date(parseInt(p[2]), parseInt(p[1]) - 1, parseInt(p[0]));
@@ -1004,7 +1371,6 @@ function getDayOfWeek(dateStr) {
 }
 
 function formatLongDate(dateStr) {
-  /* "22/05/2026" → "Tue 22 May 2026" — used on cards and PDP */
   var p = dateStr.split('/');
   if (p.length !== 3) return dateStr;
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -1029,8 +1395,6 @@ function isPastDate(dateStr) {
 
 /* ══════════════════════════════════════════
    UNIFIED PILL VISIBILITY
-   Single source of truth — both type filter
-   and upcoming toggle route through here
 ══════════════════════════════════════════ */
 function applyPillVisibility() {
   document.querySelectorAll('#swimlane-table .event-pill').forEach(function(pill) {
@@ -1060,14 +1424,12 @@ function toggleUpcomingOnly() {
 
 /* ══════════════════════════════════════════
    LOCATION FILTER DEFINITIONS
-   Keys must match classLocation values
-   exactly as entered in events.csv
 ══════════════════════════════════════════ */
 var LOCATION_DEFS = [
   { key:'Online',   label:'🌐 Online',     activeColor:'#0057A8', lightBg:'#EAF2FF', borderColor:'#0057A8', textColor:'#0057A8' },
   { key:'Academy',  label:'⭐ Academy',    activeColor:'#C8A84B', lightBg:'#FDF8EC', borderColor:'#C8A84B', textColor:'#9A7A0A' },
   { key:'Tasmania', label:'📍 Tasmania',   activeColor:'#4A7C59', lightBg:'#F2F9F5', borderColor:'#4A7C59', textColor:'#4A7C59' },
-  { key:'Offsite', label:'📍 Offsite',   activeColor:'#C05621', lightBg:'#FFF5F0', borderColor:'#C05621', textColor:'#7B341E' }
+  { key:'Offsite',  label:'📍 Offsite',    activeColor:'#C05621', lightBg:'#FFF5F0', borderColor:'#C05621', textColor:'#7B341E' }
 ];
 
 /* ── BRAND PILL FILTER ── */
@@ -1083,7 +1445,6 @@ function buildBrandPillFilter(containerId) {
     btn.className = 'brand-pill-btn';
     btn.setAttribute('data-brandkey', key);
     btn.innerHTML = b.brandIcon + ' ' + b.brandName;
-    /* active by default — filled with brand colour */
     btn.style.background  = b.brandColor;
     btn.style.color       = b.textColor;
     btn.style.borderColor = b.brandColor;
@@ -1104,7 +1465,6 @@ function toggleBrandPill(brandKey) {
     isNowActive = false;
   }
 
-  /* update ALL matching buttons across both views */
   document.querySelectorAll('.brand-pill-btn[data-brandkey="' + brandKey + '"]').forEach(function(btn) {
     var b = brandLookup[brandKey];
     if (isNowActive) {
@@ -1125,7 +1485,6 @@ function toggleBrandPill(brandKey) {
 }
 
 function applyBrandRowVisibility() {
-  /* shows/hides entire table rows — works independently of pill-level filters */
   document.querySelectorAll('#swimlane-table tbody tr').forEach(function(row) {
     var key = row.getAttribute('data-brandkey');
     row.style.display = (activeBrands.indexOf(key) !== -1) ? '' : 'none';
@@ -1143,14 +1502,14 @@ function buildLocationFilter(containerId) {
     btn.className = 'type-filter-btn';
     btn.setAttribute('data-location', loc.key);
     btn.textContent = loc.label;
-    setLocationButtonActive(btn, loc, true); // all active on build
+    setLocationButtonActive(btn, loc, true);
     btn.addEventListener('click', function() { toggleLocationFilter(loc.key); });
     bar.appendChild(btn);
   });
 }
 
 /* ══════════════════════════════════════════
-   MULTI-SELECT TOGGLE — Type filter
+   TYPE FILTER TOGGLE
 ══════════════════════════════════════════ */
 function setTypeButtonActive(btn, def, isActive) {
   if (isActive) {
@@ -1176,7 +1535,6 @@ function toggleTypeFilter(typeKey) {
   var isNowActive = activeTypes.indexOf(typeKey) !== -1;
   var def = YEARLY_TYPE_DEFS.find(function(d) { return d.key === typeKey; });
 
-  /* update ALL matching buttons across both views */
   document.querySelectorAll('.type-filter-btn[data-type="' + typeKey + '"]').forEach(function(btn) {
     if (def) setTypeButtonActive(btn, def, isNowActive);
   });
@@ -1186,7 +1544,7 @@ function toggleTypeFilter(typeKey) {
 }
 
 /* ══════════════════════════════════════════
-   MULTI-SELECT TOGGLE — Location filter
+   LOCATION FILTER TOGGLE
 ══════════════════════════════════════════ */
 function setLocationButtonActive(btn, def, isActive) {
   if (isActive) {
@@ -1212,7 +1570,6 @@ function toggleLocationFilter(locKey) {
   var isNowActive = activeLocations.indexOf(locKey) !== -1;
   var def = LOCATION_DEFS.find(function(d) { return d.key === locKey; });
 
-  /* update ALL matching buttons across both views */
   document.querySelectorAll('.type-filter-btn[data-location="' + locKey + '"]').forEach(function(btn) {
     if (def) setLocationButtonActive(btn, def, isNowActive);
   });
@@ -1224,14 +1581,10 @@ function toggleLocationFilter(locKey) {
 /* ══════════════════════════════════════════
    SEARCH VIEW
 ══════════════════════════════════════════ */
-
 function handleSearch(query) {
   lastSearchQuery = query.trim();
-
-  /* show/hide clear button */
   var clearBtn = document.getElementById('search-clear');
   if (clearBtn) clearBtn.classList.toggle('visible', lastSearchQuery.length > 0);
-
   renderSearchResults(lastSearchQuery);
 }
 
@@ -1248,7 +1601,6 @@ function renderSearchResults(query) {
   var metaEl   = document.getElementById('search-meta');
   if (!results) return;
 
-  /* ── Empty query → show prompt ── */
   if (!query) {
     metaEl.textContent = '';
     results.innerHTML  =
@@ -1259,7 +1611,6 @@ function renderSearchResults(query) {
     return;
   }
 
-  /* ── Filter events that contains query ── */
   var matched = allEvents.filter(function(ev) {
       var haystack = [
         ev.classTitle,
@@ -1270,7 +1621,6 @@ function renderSearchResults(query) {
       return haystack.indexOf(query) !== -1;
     });
 
-  /* ── No results ── */
   if (matched.length === 0) {
     metaEl.textContent = '0 events matched';
     results.innerHTML  =
@@ -1281,16 +1631,13 @@ function renderSearchResults(query) {
     return;
   }
 
-  /* ── Show count ── */
   metaEl.textContent = matched.length + ' event' + (matched.length !== 1 ? 's' : '') + ' matched';
 
-  /* ── Render cards (reuses existing buildCard) ── */
   results.innerHTML = '';
   matched.forEach(function(ev) {
     results.appendChild(buildCard(ev));
   });
 }
-
 </script>
 </body>
 </html>
