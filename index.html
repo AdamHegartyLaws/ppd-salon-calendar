@@ -10,7 +10,6 @@
 /* ── RESET ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 
-/* CHANGE 7 — background shifted to warm off-white */
 body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;min-height:100vh;}
 
 /* ── HEADER — KEEP dark header + gold accent ── */
@@ -41,12 +40,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;mi
 .error-box{background:#FFF0F0;border:1px solid #E4002B;border-radius:10px;padding:24px;color:#900;font-size:14px;line-height:1.7;margin:20px 0;}
 .error-box code{background:#FFE0E0;padding:2px 6px;border-radius:4px;font-size:12px;}
 .no-data{text-align:center;padding:40px;color:#AAA;font-size:14px;}
-
-/* ── LEGEND ── */
-.brand-legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;align-items:center;}
-.legend-pill{display:flex;align-items:center;gap:7px;background:#FFF;border-radius:30px;padding:6px 14px;font-size:12px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.07);}
-.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-.type-legend{margin-left:auto;display:flex;gap:14px;font-size:11px;color:#888;flex-wrap:wrap;}
 
 /* ── YEAR NAV ── */
 .year-nav{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
@@ -92,27 +85,22 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;mi
 .event-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.10);}
 .card-strip{height:6px;} /* KEEP — brand colour applied via JS */
 
-/* CHANGE 6 — increased padding */
 .card-body{padding:26px 28px 28px;}
 .card-brand-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
 .card-brand-icon{font-size:18px;}
 
-/* CHANGE 3 — brand name pulled back to subtle grey */
 .card-brand-name{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#C0C0C0;}
 
-/* CHANGE 4 — unified gold outlined badge, !important overrides JS inline styles */
 .card-type-badge{margin-left:auto;font-size:9px;font-weight:700;padding:3px 10px;border-radius:3px;letter-spacing:1.5px;text-transform:uppercase;background:transparent !important;color:#C8A84B !important;border:1.5px solid #C8A84B !important;}
 
-/* CHANGE 8 — heavy title / light body contrast */
 .card-title{font-size:20px;font-weight:800;color:#0D0D0D;margin-bottom:6px;line-height:1.2;}
 .card-artist{font-size:12px;font-weight:300;font-style:normal;color:#AAAAAA;letter-spacing:0.3px;margin-bottom:14px;}
 .card-desc{font-size:13px;font-weight:400;color:#666;line-height:1.75;margin-bottom:18px;}
 
-/* CHANGE 5 — label/value meta style replacing icon-heavy sentences */
 .card-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;margin-bottom:18px;padding-top:14px;border-top:1px solid #F0EDE8;}
 .card-meta-label{font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#CCCCCC;margin-bottom:2px;}
 .card-meta-value{font-size:11px;font-weight:600;color:#888;}
-/* Legacy date/location kept for backward compatibility with existing JS */
+
 .card-date{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#AAAAAA;margin-bottom:5px;}
 .card-location{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#AAAAAA;margin-bottom:18px;padding-top:5px;border-top:1px solid #F0EDE8;}
 
@@ -125,7 +113,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;mi
 /* ── SPECIAL BADGES ── */
 .member-badge{display:inline-block;font-size:9px;font-weight:700;border:1px solid #C9A84C;color:#C9A84C;padding:2px 8px;border-radius:3px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
 
-/* CHANGE 4 — free badge now black outlined, not blue filled */
 .free-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;background:transparent;color:#1A1A1A;border:1.5px solid #1A1A1A;padding:3px 8px;border-radius:3px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
 
 /* ── PRO.CONNECT DARK CARD ── */
@@ -156,7 +143,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;mi
 .pdp-close{position:absolute;top:-14px;right:-14px;width:36px;height:36px;border-radius:50%;border:none;background:#FFF;color:#333;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.2);z-index:10;line-height:36px;text-align:center;transition:background 0.15s;}
 .pdp-close:hover{background:#F0F0F0;}
 
-/* CHANGE 6 — more breathing room in modal */
 .pdp-modal{background:#FFF;border-radius:12px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,0.35);animation:pdpIn 0.22s ease;}
 @keyframes pdpIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 .pdp-strip{height:6px;border-radius:12px 12px 0 0;}
@@ -164,19 +150,15 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;mi
 .pdp-brand-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
 .pdp-brand-icon{font-size:22px;}
 
-/* CHANGE 3 — brand name pulled back */
 .pdp-brand-name{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#C0C0C0;}
 
-/* CHANGE 4 — unified gold outlined badge */
 .pdp-type-badge{margin-left:auto;font-size:9px;font-weight:700;padding:4px 11px;border-radius:3px;letter-spacing:1.5px;text-transform:uppercase;background:transparent !important;color:#C8A84B !important;border:1.5px solid #C8A84B !important;}
 
-/* CHANGE 8 — heavy title / light body contrast */
 .pdp-title{font-size:26px;font-weight:800;color:#0D0D0D;line-height:1.15;margin-bottom:6px;}
 .pdp-artist{font-size:13px;font-weight:300;font-style:normal;color:#AAAAAA;letter-spacing:0.3px;margin-bottom:20px;}
 
 .pdp-meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
 
-/* CHANGE 5 — meta chips editorial style */
 .pdp-meta-chip{display:flex;align-items:center;gap:5px;background:#F8F7F4;border-radius:4px;padding:7px 12px;font-size:11px;color:#777;font-weight:600;letter-spacing:0.5px;border:1px solid #EEEBE6;}
 
 .pdp-divider{height:1px;background:#F0F0F0;margin:20px 0;}
@@ -190,7 +172,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;mi
 .pdp-cta-btn[disabled]{opacity:0.45;cursor:not-allowed;}
 .pdp-no-link{text-align:center;font-size:11px;color:#BBB;margin-top:10px;}
 
-/* CHANGE 4 — free chip black outlined */
 .pdp-free-chip{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;background:transparent;color:#1A1A1A;border:1.5px solid #1A1A1A;padding:3px 9px;border-radius:3px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
 .pdp-member-chip{display:inline-block;font-size:9px;font-weight:700;border:1px solid #C9A84C;color:#C9A84C;padding:3px 9px;border-radius:3px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
 
@@ -256,7 +237,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#1A1A1A;mi
 <header class="site-header">
   <div class="eyebrow">L'Oréal Group Education</div>
   <h1 id="page-title">Education <span>Calendar</span></h1>
-  <div class="subtitle" id="page-subtitle">Loading data...</div>
 </header>
 
 <!-- ████ TABS ████ -->
@@ -955,18 +935,6 @@ function buildYearlyTypeFilter(containerId) {
   });
 }
 
-function applyTypeButtonStyle(btn, def, isActive) {
-  if (isActive) {
-    btn.style.background   = def.activeColor;
-    btn.style.color        = '#FFF';
-    btn.style.borderColor  = def.activeColor;
-  } else {
-    btn.style.background   = def.lightBg;
-    btn.style.color        = def.textColor;
-    btn.style.borderColor  = def.borderColor;
-  }
-}
-
 /* ══════════════════════════════════════════
    TIME & DURATION UTILITIES
    Handles 12hr (9:00 AM) and 24hr (09:00)
@@ -1181,18 +1149,6 @@ function buildLocationFilter(containerId) {
   });
 }
 
-function applyLocationButtonStyle(btn, def, isActive) {
-  if (isActive) {
-    btn.style.background  = def.activeColor;
-    btn.style.color       = '#FFF';
-    btn.style.borderColor = def.activeColor;
-  } else {
-    btn.style.background  = def.lightBg;
-    btn.style.color       = def.textColor;
-    btn.style.borderColor = def.borderColor;
-  }
-}
-
 /* ══════════════════════════════════════════
    MULTI-SELECT TOGGLE — Type filter
 ══════════════════════════════════════════ */
@@ -1333,44 +1289,6 @@ function renderSearchResults(query) {
   matched.forEach(function(ev) {
     results.appendChild(buildCard(ev));
   });
-}
-
-function buildBrandResultCard(brand, desc, query) {
-  var color   = brand.brandColor  || '#1A1A1A';
-  var textCol = brand.textColor   || '#FFFFFF';
-
-  var card = el('div', 'brand-result-card');
-
-  card.innerHTML =
-    '<div class="brc-strip" style="background:' + color + '"></div>' +
-    '<div class="brc-body">' +
-      '<div class="brc-header">' +
-        '<span class="brc-icon">' + (brand.brandIcon || '') + '</span>' +
-        '<span class="brc-name" style="color:' + color + '">' + brand.brandName + '</span>' +
-      '</div>' +
-      '<div class="brc-desc">' + highlightText(desc, query, color) + '</div>' +
-    '</div>';
-
-  return card;
-}
-
-function highlightText(text, query, brandColor) {
-  /* Wraps every case-insensitive match with a coloured <mark> */
-  if (!query) return escapeHtml(text);
-  var escaped = escapeHtml(text);
-  var escapedQ = escapeHtml(query).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  var regex = new RegExp('(' + escapedQ + ')', 'gi');
-  return escaped.replace(regex,
-    '<mark class="search-highlight" style="background:' + brandColor + '22;color:' + brandColor + '">$1</mark>'
-  );
-}
-
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
 }
 
 </script>
