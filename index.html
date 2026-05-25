@@ -318,7 +318,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
 
 <!-- ████ HEADER ████ -->
 <header class="site-header">
-  <div class="eyebrow">L'Oréal Professionnel Portfolio</div>
+  <div class="eyebrow">L'Oréal Group Education</div>
   <h1 id="page-title">Education <span>Calendar</span></h1>
   <div class="subtitle" id="page-subtitle">Loading data...</div>
 </header>
@@ -369,8 +369,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
 <div id="view-search" class="view">
   <div class="search-hero">
     <div class="section-label">Education Library</div>
-    <h2 class="section-title">Search <span>Brands</span></h2>
-    <p class="search-subtitle">Discover education opportunities across all brands</p>
+    <h2 class="section-title">Search <span>Education</span></h2>
+    <p class="search-subtitle">Discover education opportunities across all L'Oréal group brands</p>
     <div class="search-input-wrap">
       <span class="search-icon">🔍</span>
       <input
@@ -607,8 +607,6 @@ function initApp(metaRows, brandsRows, eventsRows, datesRows) {
   document.title = "L'Oréal Professional Brands | " + (meta.title || 'Education Calendar');
   document.getElementById('page-title').innerHTML =
     (meta.title || 'Education Calendar').replace('Calendar', '<span>Calendar</span>');
-  document.getElementById('page-subtitle').textContent =
-    (meta.subtitle || '') + (meta.updated ? ' · Updated ' + meta.updated : '');
 
   /* — render both views — */
   activeBrands    = brandOrder.slice();
@@ -1384,7 +1382,7 @@ function renderSearchResults(query) {
     results.innerHTML  =
       '<div class="search-no-results">' +
         '<strong>No results found</strong>' +
-        'Try a different keyword — e.g. "colour", "repair", "vegan"' +
+        'Try a different keyword — e.g. "colour", "shine", "cut"' +
       '</div>';
     return;
   }
