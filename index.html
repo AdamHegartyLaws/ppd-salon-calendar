@@ -532,7 +532,7 @@ body{
   cursor:pointer;
   transition:all 0.2s;
   letter-spacing:0.4px;
-  background: 'transparent';
+  background: transparent;
 }
 .type-filter-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.12);}
 
@@ -916,6 +916,7 @@ var displayYear  = new Date().getFullYear();
 var activeTypes     = [];
 var activeLocations = [];
 var activeBrands = [];
+var showUpcomingOnly = false;
 var lastSearchQuery = '';
 var availableYears = [];
 var today          = getTodayStr();
@@ -1289,11 +1290,12 @@ function buildCard(ev) {
     : '';
 
   var ctaLabel = ev.classCTALabel || 'Find Out More';
-  var ctaEl = ev.classLink
-    ? '<a class="card-cta" href="' + ev.classLink + '" target="_blank" rel="noopener" ' +
-        'style="background:' + color + ';color:' + textCol + '">' + ctaLabel + ' →</a>'
-    : '<button class="card-cta" style="background:' + color + ';color:' + textCol + '">' +
-        ctaLabel + ' →</button>';
+  var ctaHtml = ev.classLink
+    ? '<a class="pdp-cta-btn" href="' + ev.classLink + '" target="_blank" rel="noopener" ' +
+        'style="background:' + color + ';color:#FFFFFF">' + ctaLabel + ' →</a>'
+    : '<button class="pdp-cta-btn" disabled ' +
+        'style="background:' + color + ';color:#FFFFFF">' + ctaLabel + ' →</button>' +
+      '<p class="pdp-no-link">Registration link coming soon</p>';
 
   card.innerHTML =
     '<div class="card-strip" style="background:' + color + '"></div>' +
@@ -1574,7 +1576,7 @@ function buildBrandPillFilter(containerId) {
     btn.setAttribute('data-brandkey', key);
     btn.innerHTML = b.brandName;
     btn.style.background  = 'transparent';
-    btn.style.color       = b.textColor;
+    btn.style.color       = b.brandColor;
     btn.style.borderColor = b.brandColor;
     btn.addEventListener('click', function() { toggleBrandPill(key); });
     bar.appendChild(btn);
@@ -1598,7 +1600,7 @@ function toggleBrandPill(brandKey) {
     if (isNowActive) {
       btn.classList.remove('brand-off');
       btn.style.background  = 'transparent';
-      btn.style.color       = b.textColor;
+      btn.style.color       = b.brandColor;
       btn.style.borderColor = b.brandColor;
     } else {
       btn.classList.add('brand-off');
