@@ -1095,8 +1095,12 @@ function initApp(metaRows, brandsRows, eventsRows, datesRows) {
   }
 
   document.title = "L'Oréal Professional Brands | " + (meta.title || 'Education Calendar');
-  document.getElementById('page-title').innerHTML =
+  
+  var titleEl = document.getElementById('page-title');
+  if (titleEl) {
+  titleEl.innerHTML =
     (meta.title || 'Education Calendar').replace('Calendar', '<span>Calendar</span>');
+  }
 
   activeBrands    = brandOrder.slice();
   activeTypes     = YEARLY_TYPE_DEFS.map(function(d) { return d.key; });
