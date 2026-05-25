@@ -321,19 +321,21 @@ body{
 .card-price{display:inline-block;font-size:13px;font-weight:700;color:#1A1A1A;margin-bottom:16px;}
 
 /* 700 Bold — CTA is the action trigger, must be maximally legible */
-.card-cta{
-  display:inline-block;
-  padding:11px 20px;
-  border-radius:4px;
-  font-family:'LorealPro','Segoe UI',Arial,sans-serif;
-  font-size:11px;
-  font-weight:700;
-  cursor:pointer;
-  border:none;
-  letter-spacing:1px;
-  transition:opacity 0.2s;
-  text-decoration:none;
+.card-cta {
+  display: inline-block;
+  padding: 11px 20px;
+  border-radius: 4px;
+  font-family: 'LorealPro', 'Segoe UI', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  letter-spacing: 1px;
+  transition: opacity 0.2s;
+  text-decoration: none;
+  color: #FFFFFF !important;
 }
+
 .card-cta:hover{opacity:0.82;}
 
 /* ── SPECIAL BADGES ── */
@@ -487,21 +489,23 @@ body{
 .pdp-cta-area{margin-top:28px;}
 
 /* 700 Bold — PDP primary CTA, the most important action on screen */
-.pdp-cta-btn{
-  display:block;
-  width:100%;
-  padding:18px;
-  border-radius:4px;
-  font-family:'LorealPro','Segoe UI',Arial,sans-serif;
-  font-size:13px;
-  font-weight:700;
-  text-align:center;
-  cursor:pointer;
-  border:none;
-  letter-spacing:1px;
-  transition:opacity 0.2s;
-  text-decoration:none;
+.pdp-cta-btn {
+  display: block;
+  width: 100%;
+  padding: 18px;
+  border-radius: 4px;
+  font-family: 'LorealPro', 'Segoe UI', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  letter-spacing: 1px;
+  transition: opacity 0.2s;
+  text-decoration: none;
+  color: #FFFFFF !important; /* ← ADD THIS */
 }
+
 .pdp-cta-btn:hover{opacity:0.84;}
 .pdp-cta-btn[disabled]{opacity:0.45;cursor:not-allowed;}
 
@@ -1311,8 +1315,8 @@ function buildCard(ev) {
   var ctaLabel = ev.classCTALabel || 'Find Out More';
   var ctaEl = ev.classLink
     ? '<a class="card-cta" href="' + ev.classLink + '" target="_blank" rel="noopener" ' +
-        'style="background:' + color + ';color:' + textCol + '">' + ctaLabel + ' →</a>'
-    : '<button class="card-cta" style="background:' + color + ';color:' + textCol + '">' +
+        'style="background:' + color + '">' + ctaLabel + ' →</a>'
+    : '<button class="card-cta" style="background:' + color + '">' +
         ctaLabel + ' →</button>';
 
   card.innerHTML =
@@ -1388,11 +1392,12 @@ function showPDP(ev) {
   }
 
   var ctaLabel = ev.classCTALabel || 'Register Now';
+  
   var ctaHtml  = ev.classLink
     ? '<a class="pdp-cta-btn" href="' + ev.classLink + '" target="_blank" rel="noopener" ' +
-        'style="background:' + color + ';color:' + textCol + '">' + ctaLabel + ' →</a>'
+        'style="background:' + color + '">' + ctaLabel + ' →</a>'
     : '<button class="pdp-cta-btn" disabled ' +
-        'style="background:' + color + ';color:' + textCol + '">' + ctaLabel + ' →</button>' +
+        'style="background:' + color + '">' + ctaLabel + ' →</button>' +
       '<p class="pdp-no-link">Registration link coming soon</p>';
 
   document.getElementById('pdp-modal').innerHTML =
