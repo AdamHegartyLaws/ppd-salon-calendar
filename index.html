@@ -556,24 +556,6 @@ body{
   line-height:1.6;
 }
 
-/* ── UPCOMING ONLY TOGGLE ── */
-/* 600 SemiBold — toggle is a filter control, label weight */
-.upcoming-toggle{
-  padding:7px 18px;
-  border-radius:30px;
-  border:2px solid #1A1A1A;
-  background:#FFF;
-  color:#1A1A1A;
-  font-family:'LorealPro','Segoe UI',Arial,sans-serif;
-  font-size:12px;
-  font-weight:600;
-  cursor:pointer;
-  transition:all 0.2s;
-  margin-left:auto;
-}
-.upcoming-toggle.toggle-active{background:#1A1A1A;color:#FFF;}
-.upcoming-toggle:hover{box-shadow:0 4px 12px rgba(0,0,0,0.12);}
-
 /* ── BRAND PILL FILTER BAR ── */
 .brand-pill-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;}
 
@@ -799,7 +781,6 @@ body{
       <button class="year-btn" id="btn-prev-year" onclick="changeYear(-1)">◀</button>
       <span class="year-display" id="year-display"></span>
       <button class="year-btn" id="btn-next-year" onclick="changeYear(1)">▶</button>
-      <button class="upcoming-toggle" id="toggle-upcoming" onclick="toggleUpcomingOnly()">Upcoming Only</button>
     </div>
     <div class="table-wrap">
       <table class="swimlane-table" id="swimlane-table"></table>
@@ -935,7 +916,6 @@ var displayYear  = new Date().getFullYear();
 var activeTypes     = [];
 var activeLocations = [];
 var activeBrands = [];
-var showUpcomingOnly = false;
 var lastSearchQuery = '';
 var availableYears = [];
 var today          = getTodayStr();
@@ -1568,17 +1548,6 @@ function applyPillVisibility() {
 
     pill.style.display = (typeOk && locationOk && upcomingOk) ? 'block' : 'none';
   });
-}
-
-/* ══════════════════════════════════════════
-   UPCOMING ONLY TOGGLE
-══════════════════════════════════════════ */
-function toggleUpcomingOnly() {
-  showUpcomingOnly = !showUpcomingOnly;
-  var btn = document.getElementById('toggle-upcoming');
-  btn.classList.toggle('toggle-active', showUpcomingOnly);
-  btn.textContent = showUpcomingOnly ? 'Showing Upcoming' : 'Upcoming Only';
-  applyPillVisibility();
 }
 
 /* ══════════════════════════════════════════
