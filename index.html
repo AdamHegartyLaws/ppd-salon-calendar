@@ -71,18 +71,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
 .event-pill .tt{display:none;position:absolute;z-index:300;top:calc(100% + 5px);left:0;background:#1A1A1A;color:#FFF;font-size:11px;padding:8px 11px;border-radius:7px;white-space:nowrap;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,0.3);font-weight:400;line-height:1.5;}
 .event-pill:hover .tt{display:block;}
 
-/* ── STATS BAR ── */
-.stats-bar{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px;}
-.stat-pill{background:#FFF;border-radius:10px;padding:14px 20px;box-shadow:0 4px 16px rgba(0,0,0,0.07);text-align:center;flex:1;min-width:90px;}
-.stat-num{font-size:28px;font-weight:800;margin-bottom:2px;}
-.stat-label{font-size:10px;color:#888;letter-spacing:1px;text-transform:uppercase;}
-
-/* ── FILTER BAR ── */
-.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;}
-.filter-chip{padding:7px 16px;border-radius:30px;border:2px solid #DDD;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;background:#FFF;color:#555;}
-.filter-chip.active-chip{background:#1A1A1A !important;color:#FFF !important;border-color:#1A1A1A !important;}
-.filter-chip:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.12);}
-
 /* ── WEEK BLOCKS ── */
 .week-block{margin-bottom:40px;}
 .week-header{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap;}
@@ -238,14 +226,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#F2F2F2;color:#1A1A1A;mi
   </div>
 </div>
 
-<!-- ████ VIEW 2 — NEXT 8 WEEKS ████ -->
 <div id="view-weeks" class="view">
   <div class="section-label">Detailed View</div>
   <h2 class="section-title">Next <span>8 Weeks</span> — What's Coming Up</h2>
   <div id="loading-weeks" class="loading-box"><span class="spinner">⏳</span><br><br>Loading events...</div>
   <div id="weeks-content" style="display:none">
-    <div id="stats-bar" class="stats-bar"></div>
-    <div id="filter-bar" class="filter-bar"></div>
+    <div id="brand-pill-filter-w" class="brand-pill-bar"></div>
+    <div id="location-filter-w" class="location-filter-bar"></div>
+    <div id="type-filter-w" class="yearly-type-bar"></div>
     <div id="weeks-container"></div>
     <p class="footer-note">All events indicative · Dates subject to change · by L'Oréal Professionnel</p>
   </div>
@@ -289,14 +277,12 @@ var dateLookup   = {};   // { "18/05/2026": { weekNum:21, weekRange:"..." } }
 var brandLookup  = {};   // { "redken": { brandName, brandIcon, brandColor, textColor, isProConnect } }
 var brandOrder   = [];   // preserves CSV row order for swimlane
 var allEvents    = [];   // all parsed event rows
-var activeFilter = 'All';
 var displayYear  = new Date().getFullYear();
 var activeTypes     = [];   // populated on init with all type keys
 var activeLocations = [];   // populated on init with all location keys
 var activeBrands = [];
 var showUpcomingOnly = false;
 var availableYears = [];
-
 var today          = getTodayStr();
 var currentMonth   = new Date().getMonth();   // 0–11, auto from device
 var currentYear    = new Date().getFullYear(); // auto from device
@@ -478,12 +464,13 @@ function initApp(metaRows, brandsRows, eventsRows, datesRows) {
   activeBrands    = brandOrder.slice();
   activeTypes     = YEARLY_TYPE_DEFS.map(function(d) { return d.key; });
   activeLocations = LOCATION_DEFS.map(function(d) { return d.key; });
-  buildBrandPillFilter();
-  buildLocationFilter();
-  buildYearlyTypeFilter();
+  buildBrandPillFilter('brand-pill-filter');
+  buildBrandPillFilter('brand-pill-filter-w');
+  buildLocationFilter('location-filter');
+  buildLocationFilter('location-filter-w');
+  buildYearlyTypeFilter('yearly-type-filter');
+  buildYearlyTypeFilter('type-filter-w');
   buildSwimlane();
-  buildStats();
-  buildFilters();
   renderWeeks();
 
   /* — reveal content — */
@@ -599,75 +586,6 @@ function changeYear(dir) {
   applyPillVisibility(); 
 }
 
-/* ══════════════════════════════════════════
-   9. STATS BAR (8-week view)
-══════════════════════════════════════════ */
-function buildStats() {
-  var upcoming = getUpcomingEvents();
-  var bar = document.getElementById('stats-bar');
-  bar.innerHTML = '';
-  [
-    { num: upcoming.length,                                                    label: 'Total Events', color: '#1A1A1A' },
-    { num: upcoming.filter(function(e){ return e.classType==='Launch'; }).length,    label: 'Launches',     color: '#C9A84C' },
-    { num: upcoming.filter(function(e){ return e.classType==='Education'; }).length, label: 'Education',    color: '#0057A8' },
-    { num: upcoming.filter(function(e){ return e.classType==='Pro Styling'; }).length,  label: 'Pro Styling',    color: '#E4002B' },
-    { num: upcoming.filter(function(e){ return e.classType==='Community'; }).length, label: 'Community',    color: '#4A7C59' },
-    { num: upcoming.filter(function(e){ return e.classType==='Care Coach'; }).length, label: 'Care Coach',   color: '#6D28D9' }
-    
-  ].forEach(function(s) {
-    var p = el('div', 'stat-pill');
-    p.innerHTML =
-      '<div class="stat-num" style="color:' + s.color + '">' + s.num + '</div>' +
-      '<div class="stat-label">' + s.label + '</div>';
-    bar.appendChild(p);
-  });
-}
-
-/* ══════════════════════════════════════════
-   10. FILTER BAR
-══════════════════════════════════════════ */
-function buildFilters() {
-  var bar = document.getElementById('filter-bar');
-  bar.innerHTML = '';
-  var names = ['All'].concat(brandOrder.map(function(k) {
-    return brandLookup[k] ? brandLookup[k].brandName : k;
-  }));
-
-  names.forEach(function(name) {
-    var chip = document.createElement('button');
-    chip.className = 'filter-chip' + (name === 'All' ? ' active-chip' : '');
-    chip.textContent = name;
-    chip.setAttribute('data-brand', name);
-
-    var bData = brandOrder.map(function(k){ return brandLookup[k]; })
-                          .find(function(b){ return b && b.brandName === name; });
-    if (bData) { chip.style.borderColor = bData.brandColor; chip.style.color = bData.brandColor; }
-
-    chip.addEventListener('click', function() {
-      activeFilter = name;
-      /* reset all chips */
-      document.querySelectorAll('.filter-chip').forEach(function(c) {
-        c.classList.remove('active-chip');
-        c.style.background = '#FFF';
-        var bd = brandOrder.map(function(k){ return brandLookup[k]; })
-                           .find(function(b){ return b && b.brandName === c.getAttribute('data-brand'); });
-        if (bd) { c.style.color = bd.brandColor; c.style.borderColor = bd.brandColor; }
-        else    { c.style.color = '#555'; c.style.borderColor = '#DDD'; }
-      });
-      /* activate selected */
-      chip.classList.add('active-chip');
-      if (name === 'All') {
-        chip.style.background = '#1A1A1A';
-        chip.style.color      = '#FFF';
-        chip.style.borderColor = '#1A1A1A';
-      } else if (bData) {
-        chip.style.background = bData.brandColor + '22';
-      }
-      renderWeeks();
-    });
-    bar.appendChild(chip);
-  });
-}
 
 /* ══════════════════════════════════════════
    11. WEEK CARDS (Next 8 Weeks)
@@ -692,11 +610,13 @@ function renderWeeks() {
     return;
   }
 
-  /* filter by active brand */
+/* filter by shared brand + type + location state */
   var upcoming = getUpcomingEvents().filter(function(ev) {
-    if (activeFilter === 'All') return true;
-    var b = brandLookup[ev.brandKey];
-    return b && b.brandName === activeFilter;
+    var brandOk    = activeBrands.indexOf(ev.brandKey) !== -1;
+    var typeOk     = activeTypes.indexOf(ev.classType) !== -1;
+    var loc        = ev.classLocation || 'Other';
+    var locationOk = loc === 'Other' || activeLocations.indexOf(loc) !== -1;
+    return brandOk && typeOk && locationOk;
   });
 
   if (upcoming.length === 0) {
@@ -928,8 +848,8 @@ var YEARLY_TYPE_DEFS = [
   { key:'Care Coach', label:'■ Care Coach', activeColor:'#6D28D9', lightBg:'#EDE9FE', borderColor:'#6D28D9', textColor:'#6D28D9' }
 ];
 
-function buildYearlyTypeFilter() {
-  var bar = document.getElementById('yearly-type-filter');
+function buildYearlyTypeFilter(containerId) {
+  var bar = document.getElementById(containerId || 'yearly-type-filter');
   if (!bar) return;
   bar.innerHTML = '<span class="bpf-label">Class Type</span>';
 
@@ -1092,8 +1012,8 @@ var LOCATION_DEFS = [
 ];
 
 /* ── BRAND PILL FILTER ── */
-function buildBrandPillFilter() {
-  var bar = document.getElementById('brand-pill-filter');
+function buildBrandPillFilter(containerId) {
+  var bar = document.getElementById(containerId || 'brand-pill-filter');
   if (!bar) return;
   bar.innerHTML = '<span class="bpf-label">Brands</span>';
 
@@ -1118,16 +1038,15 @@ function toggleBrandPill(brandKey) {
   var isNowActive;
 
   if (idx === -1) {
-    activeBrands.push(brandKey);  // re-activate
+    activeBrands.push(brandKey);
     isNowActive = true;
   } else {
-    activeBrands.splice(idx, 1); // deactivate
+    activeBrands.splice(idx, 1);
     isNowActive = false;
   }
 
-  /* update button appearance */
-  var btn = document.querySelector('.brand-pill-btn[data-brandkey="' + brandKey + '"]');
-  if (btn) {
+  /* update ALL matching buttons across both views */
+  document.querySelectorAll('.brand-pill-btn[data-brandkey="' + brandKey + '"]').forEach(function(btn) {
     var b = brandLookup[brandKey];
     if (isNowActive) {
       btn.classList.remove('brand-off');
@@ -1140,9 +1059,10 @@ function toggleBrandPill(brandKey) {
       btn.style.color       = '';
       btn.style.borderColor = '';
     }
-  }
+  });
 
   applyBrandRowVisibility();
+  renderWeeks();
 }
 
 function applyBrandRowVisibility() {
@@ -1154,8 +1074,8 @@ function applyBrandRowVisibility() {
 }
 
 /* ── LOCATION FILTER ── */
-function buildLocationFilter() {
-  var bar = document.getElementById('location-filter');
+function buildLocationFilter(containerId) {
+  var bar = document.getElementById(containerId || 'location-filter');
   if (!bar) return;
   bar.innerHTML = '<span class="bpf-label">Location</span>';
 
@@ -1208,9 +1128,14 @@ function toggleTypeFilter(typeKey) {
   }
   var isNowActive = activeTypes.indexOf(typeKey) !== -1;
   var def = YEARLY_TYPE_DEFS.find(function(d) { return d.key === typeKey; });
-  var btn = document.querySelector('.type-filter-btn[data-type="' + typeKey + '"]');
-  if (btn && def) setTypeButtonActive(btn, def, isNowActive);
+
+  /* update ALL matching buttons across both views */
+  document.querySelectorAll('.type-filter-btn[data-type="' + typeKey + '"]').forEach(function(btn) {
+    if (def) setTypeButtonActive(btn, def, isNowActive);
+  });
+
   applyPillVisibility();
+  renderWeeks();
 }
 
 /* ══════════════════════════════════════════
@@ -1239,9 +1164,14 @@ function toggleLocationFilter(locKey) {
   }
   var isNowActive = activeLocations.indexOf(locKey) !== -1;
   var def = LOCATION_DEFS.find(function(d) { return d.key === locKey; });
-  var btn = document.querySelector('#location-filter .type-filter-btn[data-location="' + locKey + '"]');
-  if (btn && def) setLocationButtonActive(btn, def, isNowActive);
+
+  /* update ALL matching buttons across both views */
+  document.querySelectorAll('.type-filter-btn[data-location="' + locKey + '"]').forEach(function(btn) {
+    if (def) setLocationButtonActive(btn, def, isNowActive);
+  });
+
   applyPillVisibility();
+  renderWeeks();
 }
 
 </script>
