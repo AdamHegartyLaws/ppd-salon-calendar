@@ -655,6 +655,112 @@ body{
 
 /* 600 SemiBold — "No results found" heading needs presence */
 .search-no-results strong{display:block;font-size:18px;font-weight:600;color:#CCC;margin-bottom:8px;}
+
+/* ══════════════════════════════════════════
+   SITE HEADER — back-image.webp BACKDROP
+   Dark overlay preserves text legibility.
+   z-index stacking keeps all child content
+   above the pseudo-element overlay.
+══════════════════════════════════════════ */
+.site-header {
+  background: url('assets/images/back-image.webp') center 40% / cover no-repeat, #1A1A1A;
+  position: relative;
+}
+.site-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 26, 26, 0.84);
+  z-index: 0;
+}
+.site-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ══════════════════════════════════════════
+   HEADER LOGO — logo-access.webp
+   Constrained by height to preserve aspect
+   ratio regardless of container width.
+   filter:invert renders the logo white on
+   the dark header — remove if your logo
+   already has a light/transparent treatment.
+══════════════════════════════════════════ */
+.header-logo {
+  display: block;
+  height: 42px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+/* ══════════════════════════════════════════
+   SEARCH HERO — back-image.webp BACKDROP
+   Negative margins bleed the image full-
+   width to the view edges despite padded
+   parent. Gradient overlay fades bottom
+   for a smooth transition into results.
+══════════════════════════════════════════ */
+.search-hero {
+  background: url('assets/images/back-image.webp') center 35% / cover no-repeat;
+  position: relative;
+  padding: 72px 36px 56px;
+  margin: -32px -36px 40px;
+  border-radius: 0;
+}
+.search-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(26, 26, 26, 0.80) 0%,
+    rgba(26, 26, 26, 0.70) 60%,
+    rgba(26, 26, 26, 0.90) 100%
+  );
+  z-index: 0;
+}
+.search-hero > * {
+  position: relative;
+  z-index: 1;
+}
+/* Recolour child text elements to read on dark background */
+.search-hero .section-label   { color: rgba(200, 168, 75, 0.80); }
+.search-hero .section-title   { color: #FFFFFF; }
+.search-hero .section-title span { color: #C8A84B; }
+.search-hero .search-subtitle { color: rgba(255, 255, 255, 0.60); }
+.search-hero .search-meta     { color: rgba(255, 255, 255, 0.40); }
+
+/* ══════════════════════════════════════════
+   LOADING STATE LOGO
+   Appears above the spinner while CSV
+   data is being fetched.
+══════════════════════════════════════════ */
+.loading-logo {
+  display: block;
+  height: 44px;
+  width: auto;
+  margin: 0 auto 20px;
+  opacity: 0.40;
+  filter: grayscale(1);
+}
+
+/* ══════════════════════════════════════════
+   FOOTER LOGO
+   Small, muted instance closes each view
+   with brand presence without competing
+   with content above.
+══════════════════════════════════════════ */
+.footer-logo {
+  display: inline-block;
+  height: 16px;
+  width: auto;
+  vertical-align: middle;
+  opacity: 0.35;
+  filter: grayscale(1);
+  margin-right: 8px;
+}
+
 </style>
 
 </head>
@@ -662,8 +768,13 @@ body{
 
 <!-- ████ HEADER ████ -->
 <header class="site-header">
-  <div class="eyebrow">L'Oréal Group Education</div>
-  <h1 id="page-title">Education <span>Calendar</span></h1>
+  <img
+  src="assets/images/logo-access.webp"
+  alt="Access Hair Education"
+  class="header-logo"
+/>
+<div class="eyebrow">L'Oréal Group Education</div>
+<h1 id="page-title">Education <span>Calendar</span></h1>
 </header>
 
 <!-- ████ TABS ████ -->
@@ -677,7 +788,10 @@ body{
 <div id="view-yearly" class="view active">
   <div class="section-label">Overview</div>
   <h2 class="section-title">Full-Year <span>Brand Education</span> Snapshot</h2>
-  <div id="loading-yearly" class="loading-box"><span class="spinner">⏳</span><br><br>Loading calendar...</div>
+  <div id="loading-yearly" class="loading-box">
+    <img src="assets/images/logo-access.webp" alt="" class="loading-logo" />
+    <span class="spinner">⏳</span><br><br>Loading calendar...
+  </div>
   <div id="yearly-content" style="display:none">
     <div id="brand-pill-filter" class="brand-pill-bar"></div>
     <div id="location-filter" class="location-filter-bar"></div>
@@ -691,20 +805,29 @@ body{
     <div class="table-wrap">
       <table class="swimlane-table" id="swimlane-table"></table>
     </div>
-    <p class="footer-note">Hover over any event for details · All events are indicative · by L'Oréal Professionnel</p>
+    <p class="footer-note">
+      <img src="assets/images/logo-access.webp" alt="" class="footer-logo" />
+      Hover over any event for details · All events are indicative · by L'Oréal Professionnel
+    </p>
   </div>
 </div>
 
 <div id="view-weeks" class="view">
   <div class="section-label">Detailed View</div>
   <h2 class="section-title">Next <span>8 Weeks</span> — What's Coming Up</h2>
-  <div id="loading-weeks" class="loading-box"><span class="spinner">⏳</span><br><br>Loading events...</div>
+  <div id="loading-weeks" class="loading-box">
+    <img src="assets/images/logo-access.webp" alt="" class="loading-logo" />
+    <span class="spinner">⏳</span><br><br>Loading events...
+  </div>
   <div id="weeks-content" style="display:none">
     <div id="brand-pill-filter-w" class="brand-pill-bar"></div>
     <div id="location-filter-w" class="location-filter-bar"></div>
     <div id="type-filter-w" class="yearly-type-bar"></div>
     <div id="weeks-container"></div>
-    <p class="footer-note">All events indicative · Dates subject to change · by L'Oréal Professionnel</p>
+    <p class="footer-note">
+      <img src="assets/images/logo-access.webp" alt="" class="footer-logo" />
+      All events indicative · Dates subject to change · by L'Oréal Professionnel
+    </p>
   </div>
 </div>
 
