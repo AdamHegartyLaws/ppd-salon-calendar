@@ -777,9 +777,9 @@ body{
 
 <!-- ████ TABS ████ -->
 <div class="tab-bar">
-  <button class="tab-btn active" id="tab-yearly" onclick="switchView('yearly')">📅 Yearly Snapshot</button>
-  <button class="tab-btn"        id="tab-weeks"  onclick="switchView('weeks')">🗓 Next 8 Weeks</button>
-  <button class="tab-btn"        id="tab-search" onclick="switchView('search')">🔍 Search</button>
+  <button class="tab-btn active" id="tab-yearly" onclick="switchView('yearly')">Yearly Calendar</button>
+  <button class="tab-btn"        id="tab-weeks"  onclick="switchView('weeks')">Upcoming 8 Weeks</button>
+  <button class="tab-btn"        id="tab-search" onclick="switchView('search')">Search</button>
 </div>
 
 <!-- ████ VIEW 1 — YEARLY ████ -->
@@ -886,25 +886,32 @@ var TYPE_BADGE = {
 /* ══════════════════════════════════════════
    BRAND LOGO RENDERER
    Uses brandLogo (full file path from CSV).
-   Falls back to brandIcon emoji if no logo
-   path is present on the brand object.
+   Normalises Windows backslashes → forward
+   slashes so browser fetch always resolves.
+   onerror swaps broken img to emoji fallback.
 ══════════════════════════════════════════ */
 function brandLogoHTML(brand, size) {
   if (!brand) return '';
   size = size || 20;
 
-  // Use brandLogo path if available
-  if (brand.brandLogo && String(brand.brandLogo).trim() !== '') {
-    return '<img src="' + brand.brandLogo + '" ' +
+  var fallback = brand.brandIcon || '';
+  var logo     = brand.brandLogo ? String(brand.brandLogo).trim() : '';
+
+  // Normalise Windows backslashes to forward slashes
+  logo = logo.replace(/\\/g, '/');
+
+  if (logo !== '') {
+    return '<img src="' + logo + '" ' +
            'alt="' + (brand.brandName || '') + '" ' +
+           'data-fallback="' + fallback + '" ' +
            'style="width:auto;height:' + size + 'px;' +
            'max-width:' + (size * 3) + 'px;' +
            'object-fit:contain;vertical-align:middle;display:inline-block;" ' +
-           'onerror="this.style.display=\'none\'">';
+           'onerror="this.outerHTML=this.getAttribute(\'data-fallback\')">';
   }
 
-  // Fallback — emoji brandIcon
-  return brand.brandIcon || '';
+  // No logo path at all — show emoji directly
+  return fallback;
 }
 
 /* ══════════════════════════════════════════
@@ -1571,10 +1578,10 @@ function toggleUpcomingOnly() {
    LOCATION FILTER DEFINITIONS
 ══════════════════════════════════════════ */
 var LOCATION_DEFS = [
-  { key:'Online',   label:'🌐 Online',     activeColor:'#0057A8', lightBg:'#EAF2FF', borderColor:'#0057A8', textColor:'#0057A8' },
-  { key:'Academy',  label:'⭐ Academy',    activeColor:'#C8A84B', lightBg:'#FDF8EC', borderColor:'#C8A84B', textColor:'#9A7A0A' },
-  { key:'Tasmania', label:'📍 Tasmania',   activeColor:'#4A7C59', lightBg:'#F2F9F5', borderColor:'#4A7C59', textColor:'#4A7C59' },
-  { key:'Offsite',  label:'📍 Offsite',    activeColor:'#C05621', lightBg:'#FFF5F0', borderColor:'#C05621', textColor:'#7B341E' }
+  { key:'Online',   label:'Online',     activeColor:'#0057A8', lightBg:'#EAF2FF', borderColor:'#0057A8', textColor:'#0057A8' },
+  { key:'Academy',  label:'Academy',    activeColor:'#C8A84B', lightBg:'#FDF8EC', borderColor:'#C8A84B', textColor:'#9A7A0A' },
+  { key:'Tasmania', label:'Tasmania',   activeColor:'#4A7C59', lightBg:'#F2F9F5', borderColor:'#4A7C59', textColor:'#4A7C59' },
+  { key:'Offsite',  label:'Offsite',    activeColor:'#C05621', lightBg:'#FFF5F0', borderColor:'#C05621', textColor:'#7B341E' }
 ];
 
 /* ── BRAND PILL FILTER ── */
